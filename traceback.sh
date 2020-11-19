@@ -4,7 +4,7 @@ while [ -s working ]
 do
     echo working `wc -l working`  bad `wc -l bad_blobs`
     #cat bad_blobs working | sort | uniq > bad_blobs
-    cat working | ~/lookup/getValues b2ob | cut -d\; -f2 | sort | uniq > new_blobs
+    cat working | ~/lookup/getValues -f b2ob | cut -d\; -f2 | sort | uniq > new_blobs
     comm -23 new_blobs bad_blobs > working.1
     cat new_blobs working bad_blobs | sort | uniq > bad_blobs.1
     rm bad_blobs
