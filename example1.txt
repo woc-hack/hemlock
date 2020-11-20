@@ -143,7 +143,6 @@ Blob(s) Before Fix:
     50b797b0f59c40ea8cd7d3cbaaa358b28a313ff8
     a1cf740356dfcfec43820ec4796a7e77fadc65ea
     d15416e1761d9b765288f342673b3d2fe6dbbaed
-    
 Projects:
     0xd34df00d_gentoo
 Commit Message for 00fd73138bd11777a486ce72247ce98149052f9f:
@@ -159,7 +158,6 @@ Blob(s) In Commit:
     3d40bb7e17374740580965ae277d321d78fd490f
     73cf0fe816a2a1535929ee444789f00c5438bf69
 Blob(s) Before Fix: 
-    
     b6c85f057ff2c235e5a7e994c904978c6234d1a2
 Projects:
     0xd34df00d_gentoo
@@ -516,7 +514,6 @@ Blob(s) In Commit:
     b89a73ee16c13aa59570d44920ef7e349c169ac4
 Blob(s) Before Fix: 
     8271901cb7fe82bf8b1a4b22cd53ab82833be011
-    
 Projects:
     0mp_freebsd
 Commit Message for 002a74e570563453eab91e0f09db77550cd0b79f:
@@ -576,7 +573,6 @@ File(s) In Commit:
 Blob(s) In Commit: 
     44a4a51e73ef1de6c5d930a2a443d3e958c979ce
 Blob(s) Before Fix: 
-    
 Projects:
     0000000111_bootstrap
     01org_luv-yocto
@@ -594,7 +590,6 @@ Blob(s) In Commit:
     227e6c614fa584fe6ebec8b5adc3a7222afc163c
 Blob(s) Before Fix: 
     ec88296df6e29b134154fbac67382994bf7afa73
-    
 Projects:
     01org_luv-yocto
 Commit Message for 000b5f29419465bbcfd2067d07a6e71cecc83e61:

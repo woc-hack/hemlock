@@ -70,6 +70,8 @@ for file in ['test']:
             print ('Blob(s) Before Fix: ')
             for blob in commit_blobs.split('\n'):
                 old_blob = map('b2ob', blob)
+                if (len(old_blob) < 40):
+                    continue
                 print ('    ' + old_blob.replace('\n', '\n    '))
 
             projects = map('c2P', commit)
