@@ -1,0 +1,547 @@
+Commit With Fix: 
+    8011cd56e39a433b1837465259a9bd24a38727fb
+File(s) In Commit: 
+    ssl/s3_clnt.c
+Blob(s) In Commit: 
+    0457af87891739c57f7cb3145d3a72072539d5d5
+Blob(s) Before Fix: 
+    0457af87891739c57f7cb3145d3a72072539d5d5
+Old Blobs:
+    557
+Projects:
+    0902710055_openssl
+Commit Message for 8011cd56e39a433b1837465259a9bd24a38727fb:
+Fix CVE-2014-3470\n\nCheck session_cert is not NULL before dereferencing it.
+
+======================================================================
+Commit With Fix: 
+    8029dc43f4b232968168ca5bbd0ef47589243140
+File(s) In Commit: 
+    xen/common/spinlock.c
+    xen/include/asm-arm/arm32/spinlock.h
+    xen/include/asm-arm/arm64/spinlock.h
+    xen/include/asm-x86/spinlock.h
+    xen/include/xen/spinlock.h
+Blob(s) In Commit: 
+    06d9b048b27739a804aee548568cd0d2e96ac68f
+    5ae034d2cccb3c8d653cac57cd908aba46da7c0c
+    bc0343cbf27e1e4f5fd0d29b6f5de9cc42fd57af
+    eda9b2ea36b1fa9e7097448131d8f150d4ad53c8
+    f9f19a88cb70a53e1640ac6f5cfcf6d737ccde1c
+Blob(s) Before Fix: 
+    06d9b048b27739a804aee548568cd0d2e96ac68f
+    5ae034d2cccb3c8d653cac57cd908aba46da7c0c
+    bc0343cbf27e1e4f5fd0d29b6f5de9cc42fd57af
+    eda9b2ea36b1fa9e7097448131d8f150d4ad53c8
+    f9f19a88cb70a53e1640ac6f5cfcf6d737ccde1c
+Old Blobs:
+    92
+Projects:
+    0day-ci_xen
+Commit Message for 8029dc43f4b232968168ca5bbd0ef47589243140:
+switch to write-biased r/w locks\n\nThis is to improve fairness: A permanent flow of read acquires can otherwise lock out eventual writers indefinitely.\n\nThis is CVE-2014-9065 / XSA-114.\n\nSigned-off-by: Keir Fraser <keir@xen.org> Reviewed-by: Jan Beulich <jbeulich@suse.com> Reviewed-by: Andrew Cooper <andrew.cooper3@citrix.com> Tested-by: Andrew Cooper <andrew.cooper3@citrix.com> master commit: 2a549b9c8aa48dc39d7c97e5a93978b781b3a1db master date: 2014-12-08 14:45:46 +0100
+
+======================================================================
+Commit With Fix: 
+    80cfab8fdefa20cef32e5e591ebf9bc47d1d7bc5
+File(s) In Commit: 
+    package/exim/exim-0001-Build-buildconfig-for-the-host.patch
+    package/exim/exim-0002-Don-t-make-backup-copies-of-installed-files.patch
+    package/exim/exim-0003-Skip-version-check-and-symlink-installation.patch
+    package/exim/exim.mk
+Blob(s) In Commit: 
+    0cdaa744bcc46ffb8bbca70772e2f31781192a2a
+    845c5f8ab9b62566617fde6f0aaf2cc60abc5958
+    94d21ae1143906a107337f99f785ed74ef82597d
+    a926fbdab3b509e7b552530f88626e8bbe624d1b
+Blob(s) Before Fix: 
+    0cdaa744bcc46ffb8bbca70772e2f31781192a2a
+    845c5f8ab9b62566617fde6f0aaf2cc60abc5958
+    94d21ae1143906a107337f99f785ed74ef82597d
+    a926fbdab3b509e7b552530f88626e8bbe624d1b
+Old Blobs:
+    7
+Projects:
+    0-T-0_ps4-linux
+    00ERNEST00_FFmpeg
+    00onebook_u-boot
+    0emanresuym_motioneyeos
+Commit Message for 80cfab8fdefa20cef32e5e591ebf9bc47d1d7bc5:
+exim: security bump to version 4.83\n\nFixes CVE-2014-2972 - prevent double expansion in math comparison functions (can expand unsanitized data). Also rename patches according to patch naming policy.\n\nSigned-off-by: Gustavo Zacarias <gustavo@zacarias.com.ar> Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+
+======================================================================
+Commit With Fix: 
+    003e26bc9f7c4f5cd90e046ae112c1d09363b8d1
+File(s) In Commit: 
+    qga/service-win32.c
+Blob(s) In Commit: 
+    aef41f04f163450434f62b795d37494d25f2ece1
+Blob(s) Before Fix: 
+    aef41f04f163450434f62b795d37494d25f2ece1
+Old Blobs:
+    11
+Projects:
+    0-T-0_docker
+    0-T-0_ps4-linux
+    01hyang_qemu
+Commit Message for 003e26bc9f7c4f5cd90e046ae112c1d09363b8d1:
+Merge remote-tracking branch 'mdroth/qga-pull-2013-7-25' into staging\n\n# By Laszlo Ersek # Via Michael Roth * mdroth/qga-pull-2013-7-25:   qga: escape cmdline args when registering win32 service (CVE-2013-2231)   ga_install_service(): nest error paths more idiomatically   qga/service-win32.c: diagnostic output should go to stderr\n\nMessage-id: 1374784644-29078-1-git-send-email-mdroth@linux.vnet.ibm.com
+
+======================================================================
+Commit With Fix: 
+    005effc5d15c43b190c75c7d1dfd709a17b192aa
+File(s) In Commit: 
+    ghostscript/distinfo
+    ghostscript/patches/patch-CVE-2012-4405
+Blob(s) In Commit: 
+    00dcbe22143f951117f2a41c37cf2e194e3b57b6
+    6f551e4a7d23516e0c34ff26570657a533756203
+Blob(s) Before Fix: 
+    00dcbe22143f951117f2a41c37cf2e194e3b57b6
+    6f551e4a7d23516e0c34ff26570657a533756203
+Projects:
+    AlainODea_pkgsrc-wip
+Commit Message for 005effc5d15c43b190c75c7d1dfd709a17b192aa:
+Add patch-CVE-2012-4405, sync to print/ghostscript.
+
+======================================================================
+Commit With Fix: 
+    80dea7835635a9361e5c8be5bb52967bf1a0b34f
+File(s) In Commit: 
+    linux-kernel/TODO
+Blob(s) In Commit: 
+    eaace16812a7b5fea2fd8acd69f12efc34c7f8af
+Blob(s) Before Fix: 
+    eaace16812a7b5fea2fd8acd69f12efc34c7f8af
+Projects:
+    AlainODea_pkgsrc-wip
+Commit Message for 80dea7835635a9361e5c8be5bb52967bf1a0b34f:
+Note CVE-2008-{3528,4395}
+
+======================================================================
+Commit With Fix: 
+    00fd73138bd11777a486ce72247ce98149052f9f
+File(s) In Commit: 
+    sys-kernel/gentoo-sources/Manifest
+    sys-kernel/gentoo-sources/gentoo-sources-3.14.59.ebuild
+Blob(s) In Commit: 
+    887300c227cc861b4c19570f7882ea57354aa215
+    b996d30987c14d1a8bf108536837175b6749a5b4
+Blob(s) Before Fix: 
+    887300c227cc861b4c19570f7882ea57354aa215
+    b996d30987c14d1a8bf108536837175b6749a5b4
+Projects:
+    0xd34df00d_gentoo
+Commit Message for 00fd73138bd11777a486ce72247ce98149052f9f:
+sys-kernel/gentoo-sources: Linux 3.14.59. Includes patch for CVE-2016-0728\n\nPackage-Manager: portage-2.2.26
+
+======================================================================
+Commit With Fix: 
+    005e218e5a79b803ca54275e3b537f68fae8059d
+File(s) In Commit: 
+    net-im/prosody/Manifest
+    net-im/prosody/prosody-0.9.9.ebuild
+Blob(s) In Commit: 
+    3d40bb7e17374740580965ae277d321d78fd490f
+    73cf0fe816a2a1535929ee444789f00c5438bf69
+Blob(s) Before Fix: 
+    3d40bb7e17374740580965ae277d321d78fd490f
+    73cf0fe816a2a1535929ee444789f00c5438bf69
+Projects:
+    0xd34df00d_gentoo
+Commit Message for 005e218e5a79b803ca54275e3b537f68fae8059d:
+net-im/prosody: Add v0.9.9, including security fixes for CVE-2016-1231,CVE-2016-1232\n\nGentoo-Bug: 571312\n\nPackage-Manager: portage-2.2.26
+
+======================================================================
+Commit With Fix: 
+    80b7eb4e3360a85e6e036f42bed05e9b9c7854a9
+File(s) In Commit: 
+    include/petscversion.h
+Blob(s) In Commit: 
+    808cc5aa41577bf8511481969f526eab00b89c67
+Blob(s) Before Fix: 
+    808cc5aa41577bf8511481969f526eab00b89c67
+Projects:
+    CEED_PETSc
+Commit Message for 80b7eb4e3360a85e6e036f42bed05e9b9c7854a9:
+bk-changeset-1.651.1.15 knepley@spinetta.mcs.anl.gov|ChangeSet|20020516152749|24186 ChangeSet   1.651.1.15 02/05/16 10:27:49 knepley@spinetta.mcs.anl.gov +1 -0   My screwed up shell made this change fail\n\n  include/petscversion.h     1.42.1.12 02/05/16 10:27:25 knepley@spinetta.mcs.anl.gov +2 -2     Cranked up patch level\n\n Hg-commit: 830415368cade1ed2e89a3be8468aa3f95bc3847
+
+======================================================================
+Commit With Fix: 
+    00330de0073ca61fa45bd800df2cc4f4a947cbc9
+File(s) In Commit: 
+    xen/arch/x86/x86_64/entry.S
+Blob(s) In Commit: 
+    f42630f2dc5ff4c5672e2d1b21e9124e0761ff63
+Blob(s) Before Fix: 
+    f42630f2dc5ff4c5672e2d1b21e9124e0761ff63
+Projects:
+    0day-ci_xen
+Commit Message for 00330de0073ca61fa45bd800df2cc4f4a947cbc9:
+x86_64: Do not execute sysret with a non-canonical return address\n\nCheck for non-canonical guest RIP before attempting to execute sysret. If sysret is executed with a non-canonical value in RCX, Intel CPUs take the fault in ring0, but we will necessarily already have switched to the the user's stack pointer.\n\nThis is a security vulnerability, XSA-7 / CVE-2012-0217.\n\nSigned-off-by: Jan Beulich <JBeulich@suse.com> Signed-off-by: Ian Campbell <Ian.Campbell@citrix.com> Signed-off-by: Ian Jackson <ian.jackson@eu.citrix.com> Acked-by: Keir Fraser <keir.xen@gmail.com> Committed-by: Ian Jackson <ian.jackson@eu.citrix.com>\n\nxen-unstable changeset:   25480:76eaf5966c05 xen-unstable date:        Tue Jun 12 11:33:40 2012 +0100 Committed-by: Ian Jackson <ian.jackson@eu.citrix.com>
+
+======================================================================
+Commit With Fix: 
+    0071b1c587586ed96e4df5b1cb442277d87d920a
+File(s) In Commit: 
+    java/org/apache/tomcat/util/http/Parameters.java
+    webapps/docs/changelog.xml
+Blob(s) In Commit: 
+    435595a462915cba5f77b78bc1d48e707f50aafa
+    952681972bc8843d0a07a7645d2392bec6d52ee4
+Blob(s) Before Fix: 
+    435595a462915cba5f77b78bc1d48e707f50aafa
+    952681972bc8843d0a07a7645d2392bec6d52ee4
+Projects:
+    052727_tomcat
+Commit Message for 0071b1c587586ed96e4df5b1cb442277d87d920a:
+Merged revision 1195531 from tomcat/trunk: Replace Hashtable with HashMap in parameter processing. Improve paramsAsString() debug method by iterating over entries instead of keys.\n\nThis was part of the fix for CVE-2012-0022\n\ngit-svn-id: https://svn.apache.org/repos/asf/tomcat/tc7.0.x/trunk@1195537 13f79535-47bb-0310-9956-ffa450edef68
+
+======================================================================
+Commit With Fix: 
+    008447095ce8c3a8f713093d5e618f3f06f94ea8
+File(s) In Commit: 
+    java/org/apache/coyote/http11/InternalNioInputBuffer.java
+    webapps/docs/changelog.xml
+Blob(s) In Commit: 
+    5b7f1c9d5f73008e9856508b837b98ec6e85b0b4
+    dfa3f672bc74b96db353eb637284ee57289819b8
+Blob(s) Before Fix: 
+    5b7f1c9d5f73008e9856508b837b98ec6e85b0b4
+    dfa3f672bc74b96db353eb637284ee57289819b8
+Projects:
+    052727_tomcat
+Commit Message for 008447095ce8c3a8f713093d5e618f3f06f94ea8:
+Fix https://issues.apache.org/bugzilla/show_bug.cgi?id=50631 InternalNioInputBuffer should honor maxHttpHeadSize This addresses CVE-2011-0534\n\ngit-svn-id: https://svn.apache.org/repos/asf/tomcat/trunk@1065939 13f79535-47bb-0310-9956-ffa450edef68
+
+======================================================================
+Commit With Fix: 
+    00fffbc1a15e2696a89c721d0c94dc333ff419ef
+File(s) In Commit: 
+    changes/issue-2011-10-19L
+    src/or/dirserv.c
+Blob(s) In Commit: 
+    b879c9d401dcb39053cbd5616e3a252035962c23
+    fa7f693afe4c91389021d79014ace3e95a0022c3
+Blob(s) Before Fix: 
+    b879c9d401dcb39053cbd5616e3a252035962c23
+    fa7f693afe4c91389021d79014ace3e95a0022c3
+Projects:
+    1234max_tor
+Commit Message for 00fffbc1a15e2696a89c721d0c94dc333ff419ef:
+Don't give the Guard flag to relays without the CVE-2011-2768 fix
+
+======================================================================
+Commit With Fix: 
+    005f10352a67e8d1508a6980a8c057406c51bfca
+File(s) In Commit: 
+    src/VisualStudio/ProjectSystems/VsProjectSystem.cs
+Blob(s) In Commit: 
+    d60aad2b1c19e2ee011801007752975df0d7e8b0
+Blob(s) Before Fix: 
+    d60aad2b1c19e2ee011801007752975df0d7e8b0
+Projects:
+    Barsonax_NuGet2
+Commit Message for 005f10352a67e8d1508a6980a8c057406c51bfca:
+Fix adding reference issue to FSharp project system. Cannot set specificversion to it.
+
+======================================================================
+Commit With Fix: 
+    809c3023b699c54c90511913d3b6140dd2436550
+File(s) In Commit: 
+    libavcodec/mjpegdec.c
+Blob(s) In Commit: 
+    3ef9e82aeaf937f193a7ecae5d26c6e982b8a7f9
+Blob(s) Before Fix: 
+    3ef9e82aeaf937f193a7ecae5d26c6e982b8a7f9
+Projects:
+    00ERNEST00_FFmpeg
+Commit Message for 809c3023b699c54c90511913d3b6140dd2436550:
+mjpegdec: check for pixel format changes\n\nFixes possible invalid memory access.\n\nBased on code by Michael Niedermayer <michaelni@gmx.at>\n\nCC: libav-stable@libav.org Bug-ID: CVE-2014-8541 Found-by: Mateusz "j00ru" Jurczyk and Gynvael Coldwind
+
+======================================================================
+Commit With Fix: 
+    8069e2f6fbd79e3d3d2ba17f5f097475b43e2921
+File(s) In Commit: 
+    libavcodec/vc1.c
+Blob(s) In Commit: 
+    619e9030cb2d793fcd0eed7a3666b52264303f91
+Blob(s) Before Fix: 
+    619e9030cb2d793fcd0eed7a3666b52264303f91
+Projects:
+    00ERNEST00_FFmpeg
+Commit Message for 8069e2f6fbd79e3d3d2ba17f5f097475b43e2921:
+Fix invalid reads in VC1 decoder\n\nPatch discussed and taken from https://roundup.ffmpeg.org/issue2584 (cherry picked from commit 2bbec1eda46d907605772a8b6e8263caa4bc4c82)\n\nChange related to CVE-2011-0723
+
+======================================================================
+Commit With Fix: 
+    00fa6ffe1a0b252d6a81815e51f125225cd0b97a
+File(s) In Commit: 
+    libavformat/dv.c
+Blob(s) In Commit: 
+    389cf063e695e1bcef2ccbd43a07202b702bc68e
+Blob(s) Before Fix: 
+    389cf063e695e1bcef2ccbd43a07202b702bc68e
+Projects:
+    00ERNEST00_FFmpeg
+Commit Message for 00fa6ffe1a0b252d6a81815e51f125225cd0b97a:
+dv: Fix small stack overread related to CVE-2011-3929 and CVE-2011-3936.\n\nFound with asan.\n\nFound-by: Mateusz "j00ru" Jurczyk and Gynvael Coldwind Signed-off-by: Alex Converse <alex.converse@gmail.com> (cherry picked from commit 2d1c0dea5f6b91bec7f5fa53ec050913d851e366) Signed-off-by: Reinhard Tartler <siretart@tauware.de>
+
+======================================================================
+Commit With Fix: 
+    00915d3cd2ce61db3d6dc11f63566630a9aff4ec
+File(s) In Commit: 
+    libavcodec/pgssubdec.c
+Blob(s) In Commit: 
+    a46297857febca7a5c29d5efdd5bfe247b32a0d9
+Blob(s) Before Fix: 
+    a46297857febca7a5c29d5efdd5bfe247b32a0d9
+Projects:
+    00ERNEST00_FFmpeg
+Commit Message for 00915d3cd2ce61db3d6dc11f63566630a9aff4ec:
+pgssubdec: Check RLE size before copying\n\nMake sure the buffer size does not exceed the expected RLE size.\n\nPrevent an out of array bound write.\n\nFound-by: Mateusz "j00ru" Jurczyk and Gynvael Coldwind Signed-off-by: Michael Niedermayer <michaelni@gmx.at> Bug-Id: CVE-2013-0852\n\nSigned-off-by: Luca Barbato <lu_zero@gentoo.org> (cherry picked from commit a1f7844a11010d8552c75424d1a831b37a0ae5d9) Signed-off-by: Diego Biurrun <diego@biurrun.de>
+
+======================================================================
+Commit With Fix: 
+    801eff785aa1c791d75afaa59233e9b5e9e0f4c7
+File(s) In Commit: 
+    libavcodec/rv34.c
+Blob(s) In Commit: 
+    95ad5dd06e2aa62e4485f875a02ba9894a0ff740
+Blob(s) Before Fix: 
+    95ad5dd06e2aa62e4485f875a02ba9894a0ff740
+Projects:
+    00ERNEST00_FFmpeg
+Commit Message for 801eff785aa1c791d75afaa59233e9b5e9e0f4c7:
+rv34: error out on size changes with frame threading\n\n(cherry picked from commit cb7190cd2c691fd93e4d3664f3fce6c19ee001dd)\n\nFixes: CVE-2012-2772 (according to Ubuntu)
+
+======================================================================
+Commit With Fix: 
+    0042fb5fd1c9d257d713b15a1f45da05cf5c1c87
+File(s) In Commit: 
+    crypto/asn1/a_object.c
+    crypto/objects/obj_dat.c
+Blob(s) In Commit: 
+    84db02551e2d50fd3df25725a397d40d79ba95ef
+    bf89bc7b161f5e4cef69fcb6d131d7460042e113
+Blob(s) Before Fix: 
+    84db02551e2d50fd3df25725a397d40d79ba95ef
+    bf89bc7b161f5e4cef69fcb6d131d7460042e113
+Projects:
+    0902710055_openssl
+Commit Message for 0042fb5fd1c9d257d713b15a1f45da05cf5c1c87:
+Fix OID handling:\n\n- Upon parsing, reject OIDs with invalid base-128 encoding. - Always NUL-terminate the destination buffer in OBJ_obj2txt printing function.\n\nCVE-2014-3508\n\nReviewed-by: Dr. Stephen Henson <steve@openssl.org> Reviewed-by: Kurt Roeckx <kurt@openssl.org> Reviewed-by: Tim Hudson <tjh@openssl.org>
+
+======================================================================
+Commit With Fix: 
+    006cd7083f76ed5cb0d9a914857e9231ef1bc317
+File(s) In Commit: 
+    ssl/s3_pkt.c
+Blob(s) In Commit: 
+    59011e39c67ec51a9624da127aebb66d48df5726
+Blob(s) Before Fix: 
+    59011e39c67ec51a9624da127aebb66d48df5726
+Projects:
+    0902710055_openssl
+Commit Message for 006cd7083f76ed5cb0d9a914857e9231ef1bc317:
+Additional CVE-2014-0224 protection.\n\nReturn a fatal error if an attempt is made to use a zero length master secret.
+
+======================================================================
+Commit With Fix: 
+    807a045ab7f51993a2c1b3116016cbbd4f3d20d6
+File(s) In Commit: 
+    libavcodec/kgv1dec.c
+Blob(s) In Commit: 
+    4566e35b740d672b1ec5bda30c7e5dfb63276380
+Blob(s) Before Fix: 
+    4566e35b740d672b1ec5bda30c7e5dfb63276380
+Projects:
+    00ERNEST00_FFmpeg
+Commit Message for 807a045ab7f51993a2c1b3116016cbbd4f3d20d6:
+kgv1dec: Increase offsets array size so it is large enough.\n\nFixes CVE-2011-3945\n\nFound-by: Mateusz "j00ru" Jurczyk and Gynvael Coldwind Signed-off-by: Michael Niedermayer <michaelni@gmx.at>
+
+======================================================================
+Commit With Fix: 
+    80097a266b1848a4ebc6e8a2a1750f54c4a1abcf
+File(s) In Commit: 
+    meta/conf/distro/include/tcmode-default.inc
+Blob(s) In Commit: 
+    ed8f3036a695e048ae5226de279a543181df77c4
+Blob(s) Before Fix: 
+    ed8f3036a695e048ae5226de279a543181df77c4
+Projects:
+    folkien_Angstrom-integration-layer
+Commit Message for 80097a266b1848a4ebc6e8a2a1750f54c4a1abcf:
+tcmode-default.inc: use 4.6 for GCCVERSION and SDKGCCVERSION\n\nSigned-off-by: Khem Raj <raj.khem@gmail.com> Signed-off-by: Koen Kooi <koen@dominion.thruhere.net>
+
+======================================================================
+Commit With Fix: 
+    00d95dcf540685650169bd72662a19a45c0e5eb6
+File(s) In Commit: 
+    UPDATING
+    crypto/openssl/crypto/asn1/a_d2i_fp.c
+    crypto/openssl/crypto/buffer/buffer.c
+    crypto/openssl/crypto/mem.c
+    crypto/openssl/crypto/pkcs7/pk7_doit.c
+    crypto/openssl/crypto/x509v3/pcy_map.c
+    crypto/openssl/crypto/x509v3/pcy_tree.c
+    crypto/openssl/ssl/s3_enc.c
+    crypto/openssl/ssl/s3_srvr.c
+    crypto/openssl/ssl/ssl.h
+    crypto/openssl/ssl/ssl3.h
+    crypto/openssl/ssl/ssl_err.c
+    sys/conf/newvers.sh
+Blob(s) In Commit: 
+    0335d48f68af85f79dd930acf1edd7252182bbc2
+    05d7b9cd3d7aa7d17f859050aa7fe14d5e3cdcbb
+    255f1a526cf5b0be3e0fe0e02cecf11e2a6b0488
+    52b2ebdb631b9941123eb605cdc6564ed32c8739
+    590a369fa305f4471b9b672478ec848fc6250946
+    759231d9d4c0fc59a09aeda0292c8775cc0948b6
+    8b3024e77407a51a5882b3914c510d9f8da8ea0e
+    913c96d9792fe457c15777227b79ccaf878db7d1
+    92ad0a2b399176c8a609a9ece788c8cb39fb6a13
+    9ec921a47b901e0c3f9ff72e4455b250ef95ab62
+    acd2ede6f34c0d4fac4ec5173b0d7b41f82ca981
+    b9a85effa0058b1ad7b84e7ae7193057a8c4e372
+    cda4e7698c85971e4e37ebe35072960fca651cca
+Blob(s) Before Fix: 
+    0335d48f68af85f79dd930acf1edd7252182bbc2
+    05d7b9cd3d7aa7d17f859050aa7fe14d5e3cdcbb
+    255f1a526cf5b0be3e0fe0e02cecf11e2a6b0488
+    52b2ebdb631b9941123eb605cdc6564ed32c8739
+    590a369fa305f4471b9b672478ec848fc6250946
+    759231d9d4c0fc59a09aeda0292c8775cc0948b6
+    8b3024e77407a51a5882b3914c510d9f8da8ea0e
+    913c96d9792fe457c15777227b79ccaf878db7d1
+    92ad0a2b399176c8a609a9ece788c8cb39fb6a13
+    9ec921a47b901e0c3f9ff72e4455b250ef95ab62
+    acd2ede6f34c0d4fac4ec5173b0d7b41f82ca981
+    b9a85effa0058b1ad7b84e7ae7193057a8c4e372
+    cda4e7698c85971e4e37ebe35072960fca651cca
+Projects:
+    0mp_freebsd
+Commit Message for 00d95dcf540685650169bd72662a19a45c0e5eb6:
+Fix multiple OpenSSL vulnerabilities.\n\nSecurity:	CVE-2011-4576, CVE-2011-4619, CVE-2011-4109 Security:	CVE-2012-0884, CVE-2012-2110 Security:	FreeBSD-SA-12:01.openssl Approved by:	so (bz,simon)
+
+======================================================================
+Commit With Fix: 
+    80fa5afdadaf63dd94e85e760046b2148a8d6622
+File(s) In Commit: 
+    sys/kern/kern_exec.c
+Blob(s) In Commit: 
+    0241c4d71a2d5410cc178259c8f20e02ef5bddfd
+Blob(s) Before Fix: 
+    0241c4d71a2d5410cc178259c8f20e02ef5bddfd
+Projects:
+    0mp_freebsd
+Commit Message for 80fa5afdadaf63dd94e85e760046b2148a8d6622:
+Correct merge-o: disable the right execve() variation if !MAC
+
+======================================================================
+Commit With Fix: 
+    004b5c5de5ce821f9cc0a7d9e43120ed62f6ee7f
+File(s) In Commit: 
+    sys/kern/kern_exec.c
+Blob(s) In Commit: 
+    b84343fdb51ba46cd52d641eb413d3a18c5f4b61
+Blob(s) Before Fix: 
+    b84343fdb51ba46cd52d641eb413d3a18c5f4b61
+Projects:
+    0mp_freebsd
+Commit Message for 004b5c5de5ce821f9cc0a7d9e43120ed62f6ee7f:
+If sufficiently bad things happen during a call to kern_execve(), it is possible for do_execve() to call exit1() rather than returning.  As a result, the sequence "allocate memory  call kern_execve  free memory" can end up leaking memory.\n\nThis commit documents this astonishing behaviour and adds a call to exec_free_args() before the exit1() call in do_execve().  Since all the users of kern_execve() in the tree use exec_free_args() to free the command-line arguments after kern_execve() returns, this should be safe, and it fixes the memory leak which can otherwise occur.\n\nSubmitted by:	Peter Holm MFC after:	3 days Security:	Local denial of service\n\n git-svn-id: svn+ssh://svn.freebsd.org/base/head@150854 ccf9f872-aa2e-dd11-9fc8-001c23d0bc1f
+
+======================================================================
+Commit With Fix: 
+    002a74e570563453eab91e0f09db77550cd0b79f
+File(s) In Commit: 
+    lib/libc/posix1e/Makefile.inc
+    lib/libc/posix1e/mac_exec.c
+Blob(s) In Commit: 
+    8af22972e97c8729257facc5117fbca9e194fd94
+    b89a73ee16c13aa59570d44920ef7e349c169ac4
+Blob(s) Before Fix: 
+    8af22972e97c8729257facc5117fbca9e194fd94
+    b89a73ee16c13aa59570d44920ef7e349c169ac4
+Projects:
+    0mp_freebsd
+Commit Message for 002a74e570563453eab91e0f09db77550cd0b79f:
+Hook up the userland wrapper for __mac_execve().\n\nObtained from:	TrustedBSD Project Sponsored by:	DARPA, Network Associates Laboratories
+
+======================================================================
+Commit With Fix: 
+    0049dee9285aa7c5b8c699e39b2dcfb709054b3e
+File(s) In Commit: 
+    lib/csu/ia64/crt1.c
+Blob(s) In Commit: 
+    f8b02ab71e901458ebc71ab74c8d024928be3591
+Blob(s) Before Fix: 
+    f8b02ab71e901458ebc71ab74c8d024928be3591
+Projects:
+    0mp_freebsd
+Commit Message for 0049dee9285aa7c5b8c699e39b2dcfb709054b3e:
+Change to track the new calling convention for execve. This version only needs one line of assembler to initialise gp.
+
+======================================================================
+Commit With Fix: 
+    00fdf5663ab60629f1fb9bceeb2653c1d6faafbf
+File(s) In Commit: 
+    sys/dev/vt/vt_core.c
+Blob(s) In Commit: 
+    bddf12d790c5755fd23c9daa2b4e7f3efc9accdb
+Blob(s) Before Fix: 
+    bddf12d790c5755fd23c9daa2b4e7f3efc9accdb
+Projects:
+    0mp_freebsd
+Commit Message for 00fdf5663ab60629f1fb9bceeb2653c1d6faafbf:
+MFC r277806:\n\nUse unsigned int for index value.\n\nWithout this change a local attacker could trigger a panic by tricking the kernel into accessing undefined kernel memory.\n\nWe would like to acknowledge Francisco Falcon from CORE Security Technologies who discovered the issue and reported to the FreeBSD Security Team.\n\nMore information can be found at CORE Security's advisory at: http://www.coresecurity.com/content/freebsd-kernel-multiple-vulnerabilities\n\nThis is an errata candidate for releng/10.1 and releng/9.3.  Earlier releases are not affected.\n\nReported by:  Francisco Falcon from CORE Security Technologies Security:     CVE-2014-0998 Reviewed by:  dumbbell
+
+======================================================================
+Commit With Fix: 
+    807f03ef30feb659523b85dad0394b7f0c0c57da
+File(s) In Commit: 
+    sbin/hastd/hooks.c
+Blob(s) In Commit: 
+    7bc9913c463a27fd5845b32ac4af00cefc35492a
+Blob(s) Before Fix: 
+    7bc9913c463a27fd5845b32ac4af00cefc35492a
+Projects:
+    0mp_freebsd
+Commit Message for 807f03ef30feb659523b85dad0394b7f0c0c57da:
+execve(2), not fork(2) resets signal handler to the default value (if it isn't ignored). Correct comment talking about that.\n\nPointed out by:	kib MFC after:	3 days
+
+======================================================================
+Commit With Fix: 
+    80fec0a9842c12dc6ba39d4383d0ac4e66e60037
+File(s) In Commit: 
+    meta-oe/recipes-devtools/nodejs/nodejs_4.2.6.bb
+    meta-oe/recipes-devtools/nodejs/nodejs_4.3.1.bb
+Blob(s) In Commit: 
+    44a4a51e73ef1de6c5d930a2a443d3e958c979ce
+Blob(s) Before Fix: 
+    44a4a51e73ef1de6c5d930a2a443d3e958c979ce
+Projects:
+    0000000111_bootstrap
+    01org_luv-yocto
+Commit Message for 80fec0a9842c12dc6ba39d4383d0ac4e66e60037:
+nodejs: update to 4.3.1\n\nFixes CVE-2016-2086 and CVE-2016-2216.\n\nLICENSE checksum changed because it was regenerated using the new tools/license-builder.sh script but the licensing remains the same.\n\nSigned-off-by: Jonathan Liu <net147@gmail.com> Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com>
+
+======================================================================
+Commit With Fix: 
+    000b5f29419465bbcfd2067d07a6e71cecc83e61
+File(s) In Commit: 
+    meta-oe/recipes-connectivity/krb5/krb5/Fix-SPNEGO-context-aliasing-bugs-CVE-2015-2695.patch
+    meta-oe/recipes-connectivity/krb5/krb5_1.13.2.bb
+Blob(s) In Commit: 
+    1b02f1a04ade12eebac325e0244a8650f87349fa
+    227e6c614fa584fe6ebec8b5adc3a7222afc163c
+Blob(s) Before Fix: 
+    1b02f1a04ade12eebac325e0244a8650f87349fa
+    227e6c614fa584fe6ebec8b5adc3a7222afc163c
+Projects:
+    01org_luv-yocto
+Commit Message for 000b5f29419465bbcfd2067d07a6e71cecc83e61:
+krb5: fix CVE-2015-2695\n\nlib/gssapi/spnego/spnego_mech.c in MIT Kerberos 5 (aka krb5) before 1.14 relies on an inappropriate context handle, which allows remote attackers to cause a denial of service (incorrect pointer read and process crash) via a crafted SPNEGO packet that is mishandled during a gss_inquire_context call.\n\nBackport upstream commit to fix it: https://github.com/krb5/krb5/commit/b51b33f2bc5d1497ddf5bd107f791c101695000d\n\nSigned-off-by: Wenzong Fan <wenzong.fan@windriver.com> Signed-off-by: Martin Jansa <Martin.Jansa@gmail.com> Signed-off-by: Armin Kuster <akuster808@gmail.com>
+
+======================================================================
