@@ -8,9 +8,10 @@
 # Functions
 #
 
-num_blobs=0
-
-# blob: Get the sha1 hash for the file
+#
+# get_blob_hash: Get the sha1 hash for the file contents.
+# If a sha1 hash is passed in, just return it.
+#
 function get_blob_hash {
     local blob=$1
     if [ `echo $blob | wc -c` -ne 41 ]; then
@@ -27,35 +28,38 @@ function get_blob_hash {
     echo "$blob"
 }
 
-
-# b2ob: get old blobs from blob
+#
+# b2ob (blob to old blob) mapping.
+# input: one or more blobs separated by a newline
+#
 function b2ob {
-    local blob=$1
-    #blobs=`echo "$blob" | ~/lookup/getValues b2ob 2> /dev/null`
-    blobs=`echo "$blob" | ~/lookup/getValues b2ob`
-    # see if any old blobs were found
-    if [[ "$blobs" =~ \; ]] ; then
-        blobs=`echo $blobs | sed -e "s/^[^;]*;//" -e "s/;/\n/g"`
-        echo "$blobs"
-    else
-        echo ""
-    fi
+    local blobs="$1"
+    old_blobs=`printf "$blobs\n" | ~/lookup/getValues -f b2ob 2> /dev/null | cut -d\; -f2 | sort | uniq`
+    printf "$old_blobs"
 }
 
+#
 # b2ob_r
+# call b2ob recursively back to the root
+#
 function b2ob_r {
-    local blob=$1
+    local blob="$1"
     list+=" $blob"
-    obs=$(b2ob $blob)
-    echo "$blob"
-    num_blobs=$((num_blobs + 1))
+    obs=$(b2ob "$blob")
+    printf "$blob"
+    all_blobs+="$blob"
+    unique_blobs=''
     for ob in $obs; do
         # check for duplicates, skip if we have already seen this blob
         in=`echo $list | grep $ob`
         if [ "$in" = "" ]; then
-            b2ob_r $ob
+            unique_blobs+="$ob"
+            unique_blobs+="\n"
         fi
     done
+    if [ "$unique_blobs" != "" ]; then
+        b2ob_r "$unique_blobs"
+    fi
 }
 
 
@@ -65,7 +69,7 @@ function b2ob_r {
 
 # Check Command line args
 if [[ $# -ne 1 ]]; then
-    echo "usage: b2ob.sh <pathname | sha hash for blob>"
+    echo "usage: b2ob_r.sh <pathname | sha hash for blob>"
     exit 1
 fi
 
@@ -77,10 +81,7 @@ if [ $? -ne 0 ]; then
     exit
 fi
 
-#
-# b2ob
-#
-echo "b2ob (recursively call b2ob skipping duplicates):" >&2
-b2ob_r $blobhash
-echo "" >&2
-echo number of old blobs = $num_blobs >&2
+# call b2ob to find old blobs
+b2ob_r "$blobhash\n"
+num_blobs=`printf "$all_blobs" | wc -l`
+#echo number of old blobs = $num_blobs >&2
