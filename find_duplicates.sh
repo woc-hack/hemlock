@@ -50,6 +50,14 @@ function c2P {
     echo "$projects"
 }
 
+# given a commit, find the head commit
+function c2h {
+    local current_commit=$1
+    head=`echo $current_commit | ~/lookup/getValues -f c2h | cut -s -d ";" -f 2`
+    echo "$head"
+}
+
+
 # print information about a blob
 function print_info {
     local filename=$1
@@ -81,8 +89,24 @@ function print_info {
         # write the commit hash
         echo "commit = $commit"
 
+        # get the head commit
+        head_commit=$(c2h $commit)
+        for head in $head_commit; do
+            echo head_commit = $head_commit
+
+            # see if the blob is in the head commit
+            result=`echo $head | ~/lookup/showCmtTree.perl | grep $blob`
+            echo -n "Blob in head commit: "
+            if [ "$result" = "" ]; then
+                echo NO
+            else
+                echo YES
+            fi
+        done
+
         # get pathnames
         pathnames=`ssh da4 "echo $commit | ~/lookup/showCmtTree.perl | grep $blobhash" | cut -d \; -f 3` 
+        SAVEIFS=$IFS
         IFS=$'\n'
         for name in $pathnames; do
             echo pathname = $name
