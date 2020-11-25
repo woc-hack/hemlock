@@ -1,13 +1,13 @@
-#from Chris' worked_example
+## from Chris' worked_example
 
-#Blobs in the commit that fixes the vulnerability:
+## Blobs in the commit that fixes the vulnerability:
 ````
 echo 92fe84214967012e951f7aee5bcee9977c426eef | ~/lookup/getValues -f c2b
 92fe84214967012e951f7aee5bcee9977c426eef;9c28b015e4191677167ae7dbfa72d481524837df
 92fe84214967012e951f7aee5bcee9977c426eef;be72b3049eb13cb1efc271cc64cff8b7d8546589
 ````
 
-#Vulnerable Blobs (parents of the file from the fixed commit)
+## Vulnerable Blobs (parents of the file from the fixed commit)
 ```
 echo 92fe84214967012e951f7aee5bcee9977c426eef | ~/lookup/getValues -f c2b | cut -d\; -f 2 | ~/lookup/getValues -f b2ob | cut -d\; -f 2
 9c28b015e4191677167ae7dbfa72d481524837df;d1f1d81253f45f8e02e314f654a3abd888d1506e
@@ -15,7 +15,7 @@ be72b3049eb13cb1efc271cc64cff8b7d8546589;34192214d601d692013a1ae3811ae4e5bdfeff5
 be72b3049eb13cb1efc271cc64cff8b7d8546589;3ac7f37230db50b228f4a83e9392a747df0b81f7
 ```
 
-# looking at the first vulnerable blob:
+## looking at the first vulnerable blob:
 ```
 ./find_duplicates.sh d1f1d81253f45f8e02e314f654a3abd888d1506e
 
@@ -240,7 +240,7 @@ proj_url = https://github.com/1974vyacheslav/RIOT
 
 ```
 
-# looking at the first fixed (non-vulnerable) blob:
+## looking at the first fixed (non-vulnerable) blob:
 ```
 file is ipv6_addr_from_str.c
 
