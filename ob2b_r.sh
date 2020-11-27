@@ -82,6 +82,10 @@ if [ $? -ne 0 ]; then
 fi
 
 # call ob2b to find new blobs
-ob2b_r "$blobhash\n"
+obs=$(ob2b "$blobhash")
+if [ "$obs" = "" ]; then
+    exit
+fi
+ob2b_r "$obs\n"
 num_blobs=`printf "$all_blobs" | wc -l`
 #echo number of old blobs = $num_blobs >&2
