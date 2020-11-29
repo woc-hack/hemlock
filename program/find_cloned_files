@@ -5,6 +5,7 @@
 # can i figure out what branch a commit and blob is in ?
 # include in the input the specific blob(s) in the commit that fix the vuln.
 # try c2cc/c2pc instead of b2ob/ob2b
+# does c2h return more than one head? If so, how should I handle that?
 
 #
 # find_cloned_files:
@@ -17,6 +18,7 @@
 # Global variables
 #
 outdir="./out"   # this gets changed by command line arg 
+hostname=`uname -n`
 
 #
 # Functions
@@ -96,8 +98,11 @@ function print_info {
         fi
 
         # get pathnames
-        #pathnames=`ssh da4 "echo $commit | ~/lookup/showCmtTree.perl | grep $blobhash" | cut -d \; -f 3`
-        pathnames=`echo $commit | ~/lookup/showCmtTree.perl | grep $blob | cut -d \; -f 3`
+        if [ "$hostname" = "da4.eecs.utk.edu" ]; then
+            pathnames=`echo $commit | ~/lookup/showCmtTree.perl | grep $blob | cut -d \; -f 3`
+        else
+            pathnames=`ssh da4 "echo $commit | ~/lookup/showCmtTree.perl | grep $blob" | cut -d \; -f 3`
+        fi
         SAVEIFS=$IFS
         IFS=$'\n'
         for name in $pathnames; do
@@ -112,6 +117,13 @@ function print_info {
 #
 # Main body of script
 #
+
+
+# For now, this must run on da4 because of the calls to ~/lookup/showCmtTree
+if [ "$hostname" != "da4.eecs.utk.edu" ]; then
+    echo "Error: Must run on da4" >&2
+    exit
+fi
 
 # Check the command line args 
 if [[ $# -ne 2 ]]; then
