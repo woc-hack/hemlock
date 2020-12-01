@@ -46,8 +46,7 @@ function print_info {
     for commit in $commits; do
         rm -f $outdir/tmp
         # get projects
-        #projects=$(getValues 'c2P' "$commit\n")
-        projects=$(getValues 'c2p' "$commit\n")
+        projects=$(getValues 'c2P' "$commit\n")
         if [ -z "$projects" ]; then
             echo "No project found, c2P failed for commit $commit" >&2
         else
