@@ -6,6 +6,7 @@
 # include in the input the specific blob(s) in the commit that fix the vuln.
 # try c2cc/c2pc instead of b2ob/ob2b
 # does c2h return more than one head? If so, how should I handle that?
+# not sure I'm correctly identifying if a blob is current (in head commmit) 
 
 #
 # find_cloned_files:
@@ -18,6 +19,7 @@
 # Global variables
 #
 outdir="./out"   # this gets changed by command line arg 
+count=0
 hostname=`uname -n`
 
 #
@@ -36,64 +38,24 @@ function getValues {
 function print_info {
     local blob="$1"
     commits=$(getValues 'b2c' "$blob\n")
-    echo "------------ blob = $blob ------------"
-    echo ""
+    count=$((count+1))
+    echo "$count. working on blob $blob"
+    echo "# blob = $blob"  >> $outdir/vulnerable.md
+    echo "# blob = $blob" >> $outdir/not-vulnerable.md
+    echo "# blob = $blob" >> $outdir/unknown.md
     for commit in $commits; do
-        echo commit = $commit
-
-        # state indicates if the project is:
-        #     vulnerable: A known vulnerable blob is in the head commit.
-        #     not-vulnerable: A known good blob is in the head commit.
-        #     unknown: A vulnerable blob is in the project, but the head
-        #              commit does not contain the vulnerable blob or a known
-        #              fixed version of the blob.
-        state='uninitialized'
-
-        # get head commit and see if vulnerable file is in head commit
-        head_commit=$(getValues 'c2h' $commit\n)
-        for head in $head_commit; do
-            echo head_commit = $head_commit
-
-            # see if the blob is in the head commit
-            result=`echo $head | ~/lookup/showCmtTree.perl | grep $blob`
-            echo -n "blob in head commit: "
-            if [ "$result" != "" ]; then
-                state="vulnerable"
-                echo YES
-            else
-                state="unknown"
-                # see if head commit contains one of the known good blobs
-                tree=`echo $head | ~/lookup/showCmtTree.perl`
-                while read -r gb; do  # gb is good blob
-                    result=`echo $tree | grep $gb`
-                    if [ "$result" != "" ]; then
-                        state="not-vulnerable"
-                        break
-                    fi
-                done < $outdir/good_blobs;
-                echo NO
-            fi
-        done
-        if [ "$state" = "vulnerable" ]; then
-            echo state: $state
-        elif [ "$state" = "not-vulnerable" ]; then
-            echo state: $state
-        elif [ "$state" = "unknown" ]; then
-            echo state: $state
-        else
-            echo state: Error: state has an unknown value: \'$state\'
-        fi
-
+        rm -f $outdir/tmp
         # get projects
-        projects=$(getValues 'c2P' "$commit\n")
+        #projects=$(getValues 'c2P' "$commit\n")
+        projects=$(getValues 'c2p' "$commit\n")
         if [ -z "$projects" ]; then
-            echo "No project found, c2P failed for commit $commit"
+            echo "No project found, c2P failed for commit $commit" >&2
         else
             proj=`echo "$projects" | cut -d ";" -f 2`
             for p in $proj; do
-                echo "project = $p"
+                echo "project = $p  " >> $outdir/tmp
                 url=`./toUrl $p`
-                echo "project url = $url"
+                echo "project url = $url  " >> $outdir/tmp
             done
         fi
 
@@ -106,11 +68,61 @@ function print_info {
         SAVEIFS=$IFS
         IFS=$'\n'
         for name in $pathnames; do
-            echo path = $name
+            echo "path = $name  " >> $outdir/tmp
         done
         IFS=$SAVEIFS
 
-        echo ""
+        # get commit
+        echo "commit = $commit  " >> $outdir/tmp
+
+        # state indicates if the project is:
+        #     vulnerable: A known vulnerable blob is in the head commit.
+        #     not-vulnerable: A known good blob is in the head commit.
+        #     unknown: A vulnerable blob is in the project, but the head
+        #              commit does not contain the vulnerable blob or a known
+        #              fixed version of the blob.
+        state='uninitialized'
+
+        # get head commit and see if vulnerable file is in head commit
+        head_commit=$(getValues 'c2h' $commit\n)
+        for head in $head_commit; do
+            echo "head_commit = $head_commit  " >> $outdir/tmp
+
+            # see if the blob is in the head commit
+            result=`echo $head | ~/lookup/showCmtTree.perl | grep $blob`
+            #echo -n "blob in head commit: " >> $outdir/tmp
+            if [ "$result" != "" ]; then
+                #echo "Yes  " >> $outdir/tmp
+                state="vulnerable"
+            else
+                #echo "No  " >> $outdir/tmp
+                state="unknown"
+                # see if head commit contains one of the known good blobs
+                tree=`echo $head | ~/lookup/showCmtTree.perl`
+                while read -r gb; do  # gb is good blob
+                    result=`echo $tree | grep $gb`
+                    if [ "$result" != "" ]; then
+                        state="not-vulnerable"
+                        break
+                    fi
+                done < $outdir/good_blobs;
+            fi
+        done
+        #echo "state: $state  " >> $outdir/tmp
+
+        echo "" >> $outdir/tmp
+
+        if [ "$state" = "vulnerable" ]; then
+            cat $outdir/tmp >> $outdir/$state.md
+        elif [ "$state" = "not-vulnerable" ]; then
+            cat $outdir/tmp >> $outdir/$state.md
+        elif [ "$state" = "unknown" ]; then
+            cat $outdir/tmp >> $outdir/$state.md
+        else
+            echo state: Error: state has an unknown value: \'$state\' >&2
+        fi
+ 
+        rm -f $outdir/tmp
     done
 }
 
@@ -132,20 +144,35 @@ if [[ $# -ne 2 ]]; then
    exit 1
 fi
 
+echo Initializing
+
 # See if output directory exits. If so, exit. If not, create it.
-outdir="$1"
+if [[ "$1" == "-" || "$1" == "-f" ]]; then
+    # if output directory is -, set it to the commit hash (the 2nd arg)
+    outdir="$2"
+else
+    outdir="$1"
+fi
 if [ -e $outdir ]; then
-    if [ "$outdir" == "out" ]; then
+    if [[ "$outdir" == "out" || "$1" == "-f" ]]; then
         rm -rf "$outdir"  # temporary hack for development 
     else
         echo Error: directory $outdir already exits >&2
         exit 1
     fi
 fi
+if [ "${outdir:0:1}" == "-" ]; then
+    echo Error: directory name $outdir cannot start with - >&2
+    exit 1
+fi
 mkdir $outdir
 if [ $? -ne 0 ]; then
     exit 1
 fi
+#mkdir $outdir/projects
+#if [ $? -ne 0 ]; then
+#    exit 1
+#fi
 
 # see if the commit is valid
 commit="$2"
@@ -163,29 +190,45 @@ fi
 
 # Get the blobs before the commit with b2ob. These likely have the 
 # vulnerability. 
+echo "Getting old blobs with b2ob"
 for blob in $blobs; do
     ./b2ob_r "$blob" >> $outdir/bad_blobs
 done
 
 # Get the blobs in the commit and after. These likely contain the fix.
+echo Getting new blobs with ob2b
 printf "$blobs\n" >> $outdir/good_blobs
 for blob in $blobs; do
    ./ob2b_r "$blob" >> $outdir/good_blobs
 done
 
-# Put some information into a log file for debugging purposes.
-echo COMMIT: >> $outdir/log
-echo $commit >> $outdir/log
-echo "echo BLOBS in the commit:" >> $outdir/log
-echo "$blobs" >> $outdir/log
-echo "BAD (blobs prior to the commit that fixes a vulnerability):" >>$outdir/log
-cat $outdir/bad_blobs >> $outdir/log
-echo "GOOD (blobs after the commit that fixes a vulnerability):" >> $outdir/log
-cat $outdir/good_blobs >> $outdir/log
-
 # get information about the potentially vulnerable blobs
+echo "found "`wc -l $outdir/bad_blobs | cut -d " " -f 1`" potentially vulnerable blobs"
 while read -r blob; do
     print_info $blob
 done < $outdir/bad_blobs;
+
+#
+# Output information about this commit
+#
+echo "# Commit that fixes a vulnerability:" >> $outdir/README.md
+echo "$commit" >> $outdir/README.md
+echo "" >> $outdir/README.md
+
+num_vulnerable=`grep "^project =" $outdir/vulnerable.md | sort | uniq | wc -l`
+num_not_vulnerable=`grep "^project =" $outdir/not-vulnerable.md | sort | uniq | wc -l`
+num_unknown=`grep "^project =" $outdir/unknown.md | sort | uniq | wc -l`
+echo "# Projects with blobs in the above commit (including ancestors and descendants of blobs):" >> $outdir/README.md
+echo "$num_vulnerable <a href="vulnerable.md">Vulnerable Projects</a>  " >> $outdir/README.md
+echo "$num_not_vulnerable <a href="not-vulnerable.md">Not Vulnerable Projects</a>  " >> $outdir/README.md
+echo "$num_unknown <a href="unknown.md">Unknown Projects</a>  " >> $outdir/README.md
+echo "" >> $outdir/README.md
+
+echo "# Additional information about the above commit" >> $outdir/README.md
+echo "$blobs" | sed -e "s/$/  /" >> $outdir/blobs.md
+echo "<a href=blobs.md>Blobs</a> in commit $commit  " >> $outdir/README.md
+echo "<a href=bad_blobs>Ancestors </a> of the above blobs, which are before the fixing commit, thus presumably vulnerable. (recursive b2ob)  " >> $outdir/README.md
+echo "<a href=good_blobs>Descendants </a> of the fixed blobs, which presumably also contain the fix. (recursive ob2b)  " >> $outdir/README.md
+echo "" >> $outdir/README.md
 
 exit 0
