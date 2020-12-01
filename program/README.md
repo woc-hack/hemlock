@@ -30,10 +30,10 @@ Here's the basic algorithm:
   + for each commit
     - use c2h to get the head commit
     - see if the vulnerable blob is in the head commit
-      = if so, the project contains the vulnerable code
-      = if not
-        . see if one of the new (fixed) blobs is in the head commit
-          _ if so, the project does not contain the vulnerable code
-          _ if not, we don't know if the project contains the vulnerable code
+      + if so, the project contains the vulnerable code
+      + if not
+        - see if one of the new (fixed) blobs is in the head commit
+          + if so, the project does not contain the vulnerable code
+          + if not, we don't know if the project contains the vulnerable code
 
 
