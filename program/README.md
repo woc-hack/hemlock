@@ -4,11 +4,13 @@ find_cloned_files is a script that looks for copied files in OSS repositories th
 
 The script must run on da4.
 
-usage: ./find_cloned_files out <commit hash>
-where commit hash is the commit that fixes a known vulnerability
+usage: ./find_cloned_files <out|-> <commit hash>  
+out is the output directory. if specified as -, directory is sha hash of commit  
+commit hash is the commit that fixes a known vulnerability  
+
 
 Example:
-./find_cloned_files out 92fe84214967012e951f7aee5bcee9977c426eef 
+./find_cloned_files - 92fe84214967012e951f7aee5bcee9977c426eef 
 
 # Description
 
