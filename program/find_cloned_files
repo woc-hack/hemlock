@@ -24,7 +24,7 @@
 #
 outdir="./out"   # this gets changed by command line arg 
 hostname=`uname -n`
-max_thread=8  # how many processes to run in parallel
+max_threads=8  # how many processes to run in parallel
 
 #
 # Call when user hits control-c. Kill all child processes before exitting.
@@ -47,8 +47,11 @@ function getValues {
 function print_info {
     local blob="$1"
     local blob_count="$2"
-    commits=$(getValues 'b2c' "$blob\n")
+
     echo "$blob_count. working on blob $blob"
+
+    commits=$(getValues 'b2c' "$blob\n")
+
     echo "# blob = $blob" >> $outdir/vulnerable.md.$blob_count
     echo "# blob = $blob" >> $outdir/not-vulnerable.md.$blob_count
     echo "# blob = $blob" >> $outdir/unknown.md.$blob_count
@@ -137,7 +140,7 @@ function print_info {
  
         rm -f $outdir/tmp.$blob_count
     done
-    echo "$blob_count. finished with blob $blob"
+    echo "  $blob_count. finished with blob $blob"
 }
 
 #
@@ -218,7 +221,11 @@ blob_count=0
 while read -r blob; do
     blob_count=$((blob_count+1))
     print_info $blob $blob_count &
-    sleep 0.2
+    sleep 0.2 # give it a little time to start before starting the next
+    # limit how many sub-processes are running in parallel
+    while [ `pgrep -c -P $$` -ge $max_threads ]; do
+        sleep 1
+    done
 done < $outdir/bad_blobs;
 wait
 
