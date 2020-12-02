@@ -6,7 +6,9 @@
 # include in the input the specific blob(s) in the commit that fix the vuln.
 # try c2cc/c2pc instead of b2ob/ob2b
 # does c2h return more than one head? If so, how should I handle that?
-# not sure I'm correctly identifying if a blob is current (in head commmit) 
+# why does showCmtTree.perl sometimes return error:
+#    example: ./find_cloned_files - d7cad81093cd805110291f84d64d385557d0ffba
+
 
 #
 # find_cloned_files:
@@ -28,7 +30,7 @@ hostname=`uname -n`
 
 # getValues: call ~/lookup/getValues
 function getValues {
-    local map=$1   # c2b, b2c, c2P, b2ob, c2f, etc
+    local map=$1   # c2b, b2c, c2p, b2ob, c2f, etc
     local input="$2" # sha1 hash for blob or commit 
     result=`printf "$input" | ~/lookup/getValues -f $map | cut -s -d ";" -f 2`
     printf "$result\n"
@@ -45,33 +47,8 @@ function print_info {
     echo "# blob = $blob" >> $outdir/unknown.md
     for commit in $commits; do
         rm -f $outdir/tmp
-        # get projects
-        projects=$(getValues 'c2P' "$commit\n")
-        if [ -z "$projects" ]; then
-            echo "No project found, c2P failed for commit $commit" >&2
-        else
-            proj=`echo "$projects" | cut -d ";" -f 2`
-            for p in $proj; do
-                echo "project = $p  " >> $outdir/tmp
-                url=`./toUrl $p`
-                echo "project url = $url  " >> $outdir/tmp
-            done
-        fi
 
-        # get pathnames
-        if [ "$hostname" = "da4.eecs.utk.edu" ]; then
-            pathnames=`echo $commit | ~/lookup/showCmtTree.perl | grep $blob | cut -d \; -f 3`
-        else
-            pathnames=`ssh da4 "echo $commit | ~/lookup/showCmtTree.perl | grep $blob" | cut -d \; -f 3`
-        fi
-        SAVEIFS=$IFS
-        IFS=$'\n'
-        for name in $pathnames; do
-            echo "path = $name  " >> $outdir/tmp
-        done
-        IFS=$SAVEIFS
-
-        # get commit
+        # output commit
         echo "commit = $commit  " >> $outdir/tmp
 
         # state indicates if the project is:
@@ -88,7 +65,8 @@ function print_info {
             echo "head_commit = $head_commit  " >> $outdir/tmp
 
             # see if the blob is in the head commit
-            result=`echo $head | ~/lookup/showCmtTree.perl | grep $blob`
+            tree=`echo $head | ~/lookup/showCmtTree.perl`
+            result=`echo "$tree" | grep $blob`
             #echo -n "blob in head commit: " >> $outdir/tmp
             if [ "$result" != "" ]; then
                 #echo "Yes  " >> $outdir/tmp
@@ -109,6 +87,32 @@ function print_info {
         done
         #echo "state: $state  " >> $outdir/tmp
 
+        # get pathnames
+        if [ "$hostname" = "da4.eecs.utk.edu" ]; then
+            pathnames=`echo $commit | ~/lookup/showCmtTree.perl | grep $blob | cut -d \; -f 3`
+        else
+            pathnames=`ssh da4 "echo $commit | ~/lookup/showCmtTree.perl | grep $blob" | cut -d \; -f 3`
+        fi
+        SAVEIFS=$IFS
+        IFS=$'\n'
+        for name in $pathnames; do
+            echo "path = $name  " >> $outdir/tmp
+        done
+        IFS=$SAVEIFS
+
+        # get projects
+        projects=$(getValues 'c2p' "$commit\n")
+        if [ -z "$projects" ]; then
+            echo "No project found, c2p failed for commit $commit" >&2
+        else
+            proj=`echo "$projects" | cut -d ";" -f 2`
+            for p in $proj; do
+                url=`./toUrl $p`
+                echo "project = $p, $url  " >> $outdir/tmp
+                #echo "project url = $url  " >> $outdir/tmp
+            done
+        fi
+
         echo "" >> $outdir/tmp
 
         if [ "$state" = "vulnerable" ]; then
@@ -128,7 +132,6 @@ function print_info {
 #
 # Main body of script
 #
-
 
 # For now, this must run on da4 because of the calls to ~/lookup/showCmtTree
 if [ "$hostname" != "da4.eecs.utk.edu" ]; then
@@ -169,10 +172,6 @@ mkdir $outdir
 if [ $? -ne 0 ]; then
     exit 1
 fi
-#mkdir $outdir/projects
-#if [ $? -ne 0 ]; then
-#    exit 1
-#fi
 
 # see if the commit is valid
 commit="$2"
@@ -188,6 +187,9 @@ if [ "$blobs" = "" ]; then
     exit
 fi
 
+# get files in this commit
+files=$(getValues 'c2f' $commit\n)
+
 # Get the blobs before the commit with b2ob. These likely have the 
 # vulnerability. 
 echo "Getting old blobs with b2ob"
@@ -202,11 +204,20 @@ for blob in $blobs; do
    ./ob2b_r "$blob" >> $outdir/good_blobs
 done
 
+#
 # get information about the potentially vulnerable blobs
+#
 echo "found "`wc -l $outdir/bad_blobs | cut -d " " -f 1`" potentially vulnerable blobs"
 while read -r blob; do
     print_info $blob
 done < $outdir/bad_blobs;
+
+#
+# Collect stats to output 
+#
+num_vulnerable=`grep "^project =" $outdir/vulnerable.md | sort | uniq | wc -l`
+num_not_vulnerable=`grep "^project =" $outdir/not-vulnerable.md | sort | uniq | wc -l`
+num_unknown=`grep "^project =" $outdir/unknown.md | sort | uniq | wc -l`
 
 #
 # Output information about this commit
@@ -215,20 +226,19 @@ echo "# Commit that fixes a vulnerability:" >> $outdir/README.md
 echo "$commit" >> $outdir/README.md
 echo "" >> $outdir/README.md
 
-num_vulnerable=`grep "^project =" $outdir/vulnerable.md | sort | uniq | wc -l`
-num_not_vulnerable=`grep "^project =" $outdir/not-vulnerable.md | sort | uniq | wc -l`
-num_unknown=`grep "^project =" $outdir/unknown.md | sort | uniq | wc -l`
-echo "# Projects with blobs in the above commit (including ancestors and descendants of blobs):" >> $outdir/README.md
+echo "# Information about the above commit" >> $outdir/README.md
+echo "$blobs" | sed -e "s/$/  /" >> $outdir/blobs.md
+echo "" >> $outdir/blobs.md
+echo "$files" | sed -e "s/$/  /" >> $outdir/blobs.md
+echo "<a href=blobs.md>Blobs and filenames</a> in commit $commit  " >> $outdir/README.md
+echo "<a href=bad_blobs>Ancestors </a> of the above blobs, which are before the fixing commit, thus presumably vulnerable. (recursive b2ob)  " >> $outdir/README.md
+echo "<a href=good_blobs>Descendants </a> of the fixed blobs, which presumably also contain the fix. (recursive ob2b)  " >> $outdir/README.md
+echo "" >> $outdir/README.md
+
+echo "# Projects which have contained one of the presumably vulnerable blobs:" >> $outdir/README.md
 echo "$num_vulnerable <a href="vulnerable.md">Vulnerable Projects</a>  " >> $outdir/README.md
 echo "$num_not_vulnerable <a href="not-vulnerable.md">Not Vulnerable Projects</a>  " >> $outdir/README.md
 echo "$num_unknown <a href="unknown.md">Unknown Projects</a>  " >> $outdir/README.md
-echo "" >> $outdir/README.md
-
-echo "# Additional information about the above commit" >> $outdir/README.md
-echo "$blobs" | sed -e "s/$/  /" >> $outdir/blobs.md
-echo "<a href=blobs.md>Blobs</a> in commit $commit  " >> $outdir/README.md
-echo "<a href=bad_blobs>Ancestors </a> of the above blobs, which are before the fixing commit, thus presumably vulnerable. (recursive b2ob)  " >> $outdir/README.md
-echo "<a href=good_blobs>Descendants </a> of the fixed blobs, which presumably also contain the fix. (recursive ob2b)  " >> $outdir/README.md
 echo "" >> $outdir/README.md
 
 exit 0
