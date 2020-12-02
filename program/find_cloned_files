@@ -139,7 +139,8 @@ fi
 # Check the command line args 
 if [[ $# -ne 2 ]]; then
    echo "usage: find_cloned_files <output directory> <commit hash>" >&2
-   echo "Example: ./find_cloned_files out 92fe84214967012e951f7aee5bcee9977c426eef"
+   echo "If output directory is -, use the commit hash for the directory name"
+   echo "Example: ./find_cloned_files - 92fe84214967012e951f7aee5bcee9977c426eef"
    exit 1
 fi
 
