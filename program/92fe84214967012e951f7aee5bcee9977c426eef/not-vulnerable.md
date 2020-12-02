@@ -1,18 +1,18 @@
 # blob = d1f1d81253f45f8e02e314f654a3abd888d1506e
 commit = 8e1148ad8d1fb98b51da4630fb6ee9f4cd1aef71  
-head_commit = 329547c18c5b3515c9a54d5753f36cb3c75a1c34 (2017-06-05:03:56:48) 
+head_commit = 329547c18c5b3515c9a54d5753f36cb3c75a1c34 (2017-06-05:03:56:48)   
 path = sys/net/network_layer/ipv6/addr/ipv6_addr_from_str.c  
 project = RIOT-OS_RIOT, https://github.com/RIOT-OS/RIOT  
 
 # blob = 2ea89b1d63aaac8943db9223f11f454110766125
 # blob = 8d62e72ca48d1f85331398c62dcd7f035527e5d8
 commit = 3f6448f09e493b6b332106efce56b4f1232fa256  
-head_commit = 329547c18c5b3515c9a54d5753f36cb3c75a1c34 (2017-06-05:03:56:48) 
+head_commit = 329547c18c5b3515c9a54d5753f36cb3c75a1c34 (2017-06-05:03:56:48)   
 path = sys/net/network_layer/ipv6/addr/ipv6_addr_from_str.c  
 project = RIOT-OS_RIOT, https://github.com/RIOT-OS/RIOT  
 
 commit = c72395b2dc3536ca22492a215cffdc95324272ad  
-head_commit = 329547c18c5b3515c9a54d5753f36cb3c75a1c34 (2017-06-05:03:56:48) 
+head_commit = 329547c18c5b3515c9a54d5753f36cb3c75a1c34 (2017-06-05:03:56:48)   
 path = sys/net/network_layer/ipv6/addr/ipv6_addr_from_str.c  
 project = RIOT-OS_RIOT, https://github.com/RIOT-OS/RIOT  
 
@@ -20,7 +20,7 @@ project = RIOT-OS_RIOT, https://github.com/RIOT-OS/RIOT
 # blob = 3ac7f37230db50b228f4a83e9392a747df0b81f7
 # blob = 113ea5a97f46d091bec3c4b1d76a4a76cc3630d5
 commit = 8e1148ad8d1fb98b51da4630fb6ee9f4cd1aef71  
-head_commit = 329547c18c5b3515c9a54d5753f36cb3c75a1c34 (2017-06-05:03:56:48) 
+head_commit = 329547c18c5b3515c9a54d5753f36cb3c75a1c34 (2017-06-05:03:56:48)   
 path = tests/unittests/tests-ipv6_addr/tests-ipv6_addr.c  
 project = RIOT-OS_RIOT, https://github.com/RIOT-OS/RIOT  
 
