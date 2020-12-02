@@ -241,7 +241,7 @@ echo "<a href=good_blobs>Descendants </a> of the fixed blobs, which presumably a
 echo "" >> $outdir/README.md
 
 echo "# Projects which have contained one of the presumably vulnerable blobs:" >> $outdir/README.md
-echo "$num_vulnerable <a href="vulnerable.md">Vulnerable Projects</a> (Kwown to contain presumably vulnerable blob in the most current revision)  " >> $outdir/README.md
+echo "$num_vulnerable <a href="vulnerable.md">Vulnerable Projects</a> (Known to contain presumably vulnerable blob in the most current revision)  " >> $outdir/README.md
 echo "$num_not_vulnerable <a href="not-vulnerable.md">Not Vulnerable Projects</a> (Known to contain a fixed version in the most current revision)  " >> $outdir/README.md
 echo "$num_unknown <a href="unknown.md">Unknown Projects</a> (Presumably vulnerable code has been changed in most current revision, unknown if the changes fixes vulnerability)  " >> $outdir/README.md
 echo "" >> $outdir/README.md

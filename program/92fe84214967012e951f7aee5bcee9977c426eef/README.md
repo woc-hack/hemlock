@@ -7,7 +7,7 @@ d47cd809457e9b942a3324541f763bc9240eb05d
 <a href=good_blobs>Descendants </a> of the fixed blobs, which presumably also contain the fix. (recursive ob2b)  
 
 # Projects which have contained one of the presumably vulnerable blobs:
-1113 <a href=vulnerable.md>Vulnerable Projects</a> (Kwown to contain presumably vulnerable blob in the most current revision)  
+1113 <a href=vulnerable.md>Vulnerable Projects</a> (Known to contain presumably vulnerable blob in the most current revision)  
 1 <a href=not-vulnerable.md>Not Vulnerable Projects</a> (Known to contain a fixed version in the most current revision)  
 950 <a href=unknown.md>Unknown Projects</a> (Presumably vulnerable code has been changed in most current revision, unknown if the changes fixes vulnerability)  
 
