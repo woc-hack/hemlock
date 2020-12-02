@@ -67,7 +67,7 @@ function print_info {
             ta=$(getValues 'c2ta' $head\n)
             t=`echo $ta | awk -F\; '{ printf ("%s\n", strftime("%F:%T", $1)) }'`
 
-            echo "head_commit = $head ($t) " >> $outdir/tmp
+            echo "head_commit = $head ($t)  " >> $outdir/tmp
 
             # see if the blob is in the head commit
             tree=`echo $head | ~/lookup/showCmtTree.perl`
