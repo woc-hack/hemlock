@@ -23,8 +23,13 @@
 # Global variables
 #
 outdir="./out"   # this gets changed by command line arg 
-count=0
 hostname=`uname -n`
+max_thread=8  # how many processes to run in parallel
+
+#
+# Call when user hits control-c. Kill all child processes before exitting.
+#
+trap 'pkill -P $$; echo killed; exit' SIGINT SIGTERM
 
 #
 # Functions
@@ -41,17 +46,17 @@ function getValues {
 # print information about a blob
 function print_info {
     local blob="$1"
+    local blob_count="$2"
     commits=$(getValues 'b2c' "$blob\n")
-    count=$((count+1))
-    echo "$count. working on blob $blob"
-    echo "# blob = $blob"  >> $outdir/vulnerable.md
-    echo "# blob = $blob" >> $outdir/not-vulnerable.md
-    echo "# blob = $blob" >> $outdir/unknown.md
+    echo "$blob_count. working on blob $blob"
+    echo "# blob = $blob" >> $outdir/vulnerable.md.$blob_count
+    echo "# blob = $blob" >> $outdir/not-vulnerable.md.$blob_count
+    echo "# blob = $blob" >> $outdir/unknown.md.$blob_count
     for commit in $commits; do
-        rm -f $outdir/tmp
+        rm -f $outdir/tmp.$blob_count
 
         # output commit
-        echo "commit = $commit  " >> $outdir/tmp
+        echo "commit = $commit  " >> $outdir/tmp.$blob_count
 
         # state indicates if the project is:
         #     vulnerable: A known vulnerable blob is in the head commit.
@@ -67,17 +72,17 @@ function print_info {
             ta=$(getValues 'c2ta' $head\n)
             t=`echo $ta | awk -F\; '{ printf ("%s\n", strftime("%F:%T", $1)) }'`
 
-            echo "head_commit = $head ($t)  " >> $outdir/tmp
+            echo "head_commit = $head ($t)  " >> $outdir/tmp.$blob_count
 
             # see if the blob is in the head commit
             tree=`echo $head | ~/lookup/showCmtTree.perl`
             result=`echo "$tree" | grep $blob`
-            #echo -n "blob in head commit: " >> $outdir/tmp
+            #echo -n "blob in head commit: " >> $outdir/tmp.$blob_count
             if [ "$result" != "" ]; then
-                #echo "Yes  " >> $outdir/tmp
+                #echo "Yes  " >> $outdir/tmp.$blob_count
                 state="vulnerable"
             else
-                #echo "No  " >> $outdir/tmp
+                #echo "No  " >> $outdir/tmp.$blob_count
                 state="unknown"
                 # see if head commit contains one of the known good blobs
                 tree=`echo $head | ~/lookup/showCmtTree.perl`
@@ -90,7 +95,7 @@ function print_info {
                 done < $outdir/good_blobs;
             fi
         done
-        #echo "state: $state  " >> $outdir/tmp
+        #echo "state: $state  " >> $outdir/tmp.$blob_count
 
         # get pathnames
         if [ "$hostname" = "da4.eecs.utk.edu" ]; then
@@ -101,7 +106,7 @@ function print_info {
         SAVEIFS=$IFS
         IFS=$'\n'
         for name in $pathnames; do
-            echo "path = $name  " >> $outdir/tmp
+            echo "path = $name  " >> $outdir/tmp.$blob_count
         done
         IFS=$SAVEIFS
 
@@ -113,25 +118,26 @@ function print_info {
             proj=`echo "$projects" | cut -d ";" -f 2`
             for p in $proj; do
                 url=`./toUrl $p`
-                echo "project = $p, $url  " >> $outdir/tmp
-                #echo "project url = $url  " >> $outdir/tmp
+                echo "project = $p, $url  " >> $outdir/tmp.$blob_count
+                #echo "project url = $url  " >> $outdir/tmp.$blob_count
             done
         fi
 
-        echo "" >> $outdir/tmp
+        echo "" >> $outdir/tmp.$blob_count
 
         if [ "$state" = "vulnerable" ]; then
-            cat $outdir/tmp >> $outdir/$state.md
+            cat $outdir/tmp.$blob_count >> $outdir/$state.md.$blob_count
         elif [ "$state" = "not-vulnerable" ]; then
-            cat $outdir/tmp >> $outdir/$state.md
+            cat $outdir/tmp.$blob_count >> $outdir/$state.md.$blob_count
         elif [ "$state" = "unknown" ]; then
-            cat $outdir/tmp >> $outdir/$state.md
+            cat $outdir/tmp.$blob_count >> $outdir/$state.md.$blob_count
         else
             echo state: Error: state has an unknown value: \'$state\' >&2
         fi
  
-        rm -f $outdir/tmp
+        rm -f $outdir/tmp.$blob_count
     done
+    echo "$blob_count. finished with blob $blob"
 }
 
 #
@@ -179,43 +185,53 @@ if [ $? -ne 0 ]; then
 fi
 
 # see if the commit is valid
-commit="$2"
-if [ `echo $commit | wc -c` -ne 41 ]; then
-    echo "Error: $commit is not a valid sha1 hash" >&2
+fixed_commit="$2"
+if [ `echo $fixed_commit | wc -c` -ne 41 ]; then
+    echo "Error: $fixed_commit is not a valid sha1 hash" >&2
     exit 1
 fi
 
 # get blobs in this commit
-blobs=$(getValues 'c2b' $commit\n)
+blobs=$(getValues 'c2b' $fixed_commit\n)
 if [ "$blobs" = "" ]; then
-    echo "Error: commit $commit is not found in WoC"
+    echo "Error: commit $fixed_commit is not found in WoC"
     exit
 fi
 
 # get files in this commit
-files=$(getValues 'c2f' $commit\n)
+files=$(getValues 'c2f' $fixed_commit\n)
 
 # Get the blobs before the commit with b2ob. These likely have the 
-# vulnerability. 
-echo "Getting old blobs with b2ob"
-for blob in $blobs; do
-    ./b2ob_r "$blob" >> $outdir/bad_blobs
-done
-
-# Get the blobs in the commit and after. These likely contain the fix.
-echo Getting new blobs with ob2b
+# vulnerability. Then get the blobs in the commit and after. These 
+# likely contain the fix.
+echo "Getting old blobs with b2ob and new blobs with ob2b"
+./b2ob_r $blobs >> $outdir/bad_blobs &
 printf "$blobs\n" >> $outdir/good_blobs
-for blob in $blobs; do
-   ./ob2b_r "$blob" >> $outdir/good_blobs
-done
+./ob2b_r $blobs >> $outdir/good_blobs &
+wait  # run b2ob_r and ob2b_r in parallel and then wait for them to both finish
 
 #
 # get information about the potentially vulnerable blobs
 #
 echo "found "`wc -l $outdir/bad_blobs | cut -d " " -f 1`" potentially vulnerable blobs"
+blob_count=0
 while read -r blob; do
-    print_info $blob
+    blob_count=$((blob_count+1))
+    print_info $blob $blob_count &
+    sleep 0.2
 done < $outdir/bad_blobs;
+wait
+
+#
+# Get all the information collected in the different threads above into one 
+# set of files
+#
+for ((i=1; i<=$blob_count; i++)); do
+    cat $outdir/vulnerable.md.$i >> $outdir/vulnerable.md
+    cat $outdir/not-vulnerable.md.$i >> $outdir/not-vulnerable.md
+    cat $outdir/unknown.md.$i >> $outdir/unknown.md
+    rm $outdir/vulnerable.md.$i $outdir/not-vulnerable.md.$i $outdir/unknown.md.$i
+done
 
 #
 # Collect stats to output 
@@ -228,14 +244,14 @@ num_unknown=`grep "^project =" $outdir/unknown.md | sort | uniq | wc -l`
 # Output information about this commit
 #
 echo "# Commit that fixes a vulnerability:" >> $outdir/README.md
-echo "$commit" >> $outdir/README.md
+echo "$fixed_commit" >> $outdir/README.md
 echo "" >> $outdir/README.md
 
 echo "# Information about the above commit" >> $outdir/README.md
 echo "$blobs" | sed -e "s/$/  /" >> $outdir/blobs.md
 echo "" >> $outdir/blobs.md
 echo "$files" | sed -e "s/$/  /" >> $outdir/blobs.md
-echo "<a href=blobs.md>Blobs and filenames</a> in commit $commit  " >> $outdir/README.md
+echo "<a href=blobs.md>Blobs and filenames</a> in commit $fixed_commit  " >> $outdir/README.md
 echo "<a href=bad_blobs>Ancestors </a> of the above blobs, which are before the fixing commit, thus presumably vulnerable. (recursive b2ob)  " >> $outdir/README.md
 echo "<a href=good_blobs>Descendants </a> of the fixed blobs, which presumably also contain the fix. (recursive ob2b)  " >> $outdir/README.md
 echo "" >> $outdir/README.md
