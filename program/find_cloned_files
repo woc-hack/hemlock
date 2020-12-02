@@ -8,6 +8,8 @@
 # does c2h return more than one head? If so, how should I handle that?
 # why does showCmtTree.perl sometimes return error:
 #    example: ./find_cloned_files - d7cad81093cd805110291f84d64d385557d0ffba
+# might want to remove c2ta to make it run faster, don't really need that info
+# see if there are ways to improve performance
 
 
 #
@@ -62,7 +64,10 @@ function print_info {
         # get head commit and see if vulnerable file is in head commit
         head_commit=$(getValues 'c2h' $commit\n)
         for head in $head_commit; do
-            echo "head_commit = $head_commit  " >> $outdir/tmp
+            ta=$(getValues 'c2ta' $head\n)
+            t=`echo $ta | awk -F\; '{ printf ("%s\n", strftime("%F:%T", $1)) }'`
+
+            echo "head_commit = $head ($t) " >> $outdir/tmp
 
             # see if the blob is in the head commit
             tree=`echo $head | ~/lookup/showCmtTree.perl`
@@ -236,9 +241,9 @@ echo "<a href=good_blobs>Descendants </a> of the fixed blobs, which presumably a
 echo "" >> $outdir/README.md
 
 echo "# Projects which have contained one of the presumably vulnerable blobs:" >> $outdir/README.md
-echo "$num_vulnerable <a href="vulnerable.md">Vulnerable Projects</a>  " >> $outdir/README.md
-echo "$num_not_vulnerable <a href="not-vulnerable.md">Not Vulnerable Projects</a>  " >> $outdir/README.md
-echo "$num_unknown <a href="unknown.md">Unknown Projects</a>  " >> $outdir/README.md
+echo "$num_vulnerable <a href="vulnerable.md">Vulnerable Projects</a> (Kwown to contain presumably vulnerable blob in the most current revision)  " >> $outdir/README.md
+echo "$num_not_vulnerable <a href="not-vulnerable.md">Not Vulnerable Projects</a> (Known to contain a fixed version in the most current revision)  " >> $outdir/README.md
+echo "$num_unknown <a href="unknown.md">Unknown Projects</a> (Presumably vulnerable code has been changed in most current revision, unknown if the changes fixes vulnerability)  " >> $outdir/README.md
 echo "" >> $outdir/README.md
 
 exit 0
