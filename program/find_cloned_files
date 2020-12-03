@@ -1,15 +1,17 @@
 #! /bin/bash
 
 #TODO:
+# why does showCmtTree.perl sometimes return error:
+#    example: ./find_cloned_files - d7cad81093cd805110291f84d64d385557d0ffba
+#
 # deduplication (blob and many old blobs will be in same project)
 # can i figure out what branch a commit and blob is in ?
 # include in the input the specific blob(s) in the commit that fix the vuln.
 # try c2cc/c2pc instead of b2ob/ob2b
 # does c2h return more than one head? If so, how should I handle that?
-# why does showCmtTree.perl sometimes return error:
-#    example: ./find_cloned_files - d7cad81093cd805110291f84d64d385557d0ffba
-# might want to remove c2ta to make it run faster, don't really need that info
 # see if there are ways to improve performance
+#      showCmtTree.perl is sometimes called multiple times on the same commit
+#      maybe the for commit loop in print_info should be parallel
 
 
 #
@@ -22,6 +24,7 @@
 #
 # Global variables
 #
+verbose="false"   # if true, include project url and commit time
 outdir="./out"   # this gets changed by command line arg 
 hostname=`uname -n`
 max_threads=8  # how many processes to run in parallel
@@ -72,10 +75,13 @@ function print_info {
         # get head commit and see if vulnerable file is in head commit
         head_commit=$(getValues 'c2h' $commit\n)
         for head in $head_commit; do
-            ta=$(getValues 'c2ta' $head\n)
-            t=`echo $ta | awk -F\; '{ printf ("%s\n", strftime("%F:%T", $1)) }'`
-
-            echo "head_commit = $head ($t)  " >> $outdir/tmp.$blob_count
+            if [ "$verbose" = "true" ]; then
+                ta=$(getValues 'c2ta' $head\n)
+                t=`echo $ta | awk -F\; '{ printf ("(%s)", strftime("%F:%T", $1)) }'`
+            else
+                t=""
+            fi
+            echo "head_commit = $head $t  " >> $outdir/tmp.$blob_count
 
             # see if the blob is in the head commit
             tree=`echo $head | ~/lookup/showCmtTree.perl`
@@ -88,7 +94,6 @@ function print_info {
                 #echo "No  " >> $outdir/tmp.$blob_count
                 state="unknown"
                 # see if head commit contains one of the known good blobs
-                tree=`echo $head | ~/lookup/showCmtTree.perl`
                 while read -r gb; do  # gb is good blob
                     result=`echo $tree | grep $gb`
                     if [ "$result" != "" ]; then
@@ -120,9 +125,10 @@ function print_info {
         else
             proj=`echo "$projects" | cut -d ";" -f 2`
             for p in $proj; do
-                url=`./toUrl $p`
+                if [ "$verbose" == "true" ]; then
+                    url=`./toUrl $p`
+                fi
                 echo "project = $p, $url  " >> $outdir/tmp.$blob_count
-                #echo "project url = $url  " >> $outdir/tmp.$blob_count
             done
         fi
 
