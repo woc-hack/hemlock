@@ -56,14 +56,14 @@ function print_info {
 
     commits=$(getValues 'b2c' "$blob\n")
 
-    echo "# blob = $blob" >> $outdir/vulnerable.md.$blob_count
-    echo "# blob = $blob" >> $outdir/not-vulnerable.md.$blob_count
-    echo "# blob = $blob" >> $outdir/unknown.md.$blob_count
+    echo "<h1>blob = $blob</h1>" >> $outdir/vulnerable.md.$blob_count
+    echo "<h1>blob = $blob</h1>" >> $outdir/not-vulnerable.md.$blob_count
+    echo "<h1>blob = $blob</h1>" >> $outdir/unknown.md.$blob_count
     for commit in $commits; do
         rm -f $outdir/tmp.$blob_count
 
         # output commit
-        echo "commit = $commit  " >> $outdir/tmp.$blob_count
+        echo "commit = $commit<br />" >> $outdir/tmp.$blob_count
 
         # state indicates if the project is:
         #     vulnerable: A known vulnerable blob is in the head commit.
@@ -82,7 +82,7 @@ function print_info {
             else
                 t=""
             fi
-            echo "head_commit = $head $t  " >> $outdir/tmp.$blob_count
+            echo "head_commit = $head $t<br />" >> $outdir/tmp.$blob_count
 
             # see if the blob is in the head commit
             if [ "$hostname" = "da4.eecs.utk.edu" ]; then
@@ -119,7 +119,7 @@ function print_info {
         SAVEIFS=$IFS
         IFS=$'\n'
         for name in $pathnames; do
-            echo "path = $name  " >> $outdir/tmp.$blob_count
+            echo "path = $name<br />" >> $outdir/tmp.$blob_count
         done
         IFS=$SAVEIFS
 
@@ -132,12 +132,15 @@ function print_info {
             for p in $proj; do
                 if [ "$verbose" == "true" ]; then
                     url=`./toUrl $p`
+                    short=`echo $url | sed -e "s@https://@@" -e "s@http://@@"`
+                    echo "project = <a href=\"$url\">$short</a><br />" >> $outdir/tmp.$blob_count
+                else
+                    echo "project = $pre$p$post<br />" >> $outdir/tmp.$blob_count
                 fi
-                echo "project = $p, $url  " >> $outdir/tmp.$blob_count
             done
         fi
 
-        echo "" >> $outdir/tmp.$blob_count
+        echo "<br />" >> $outdir/tmp.$blob_count
 
         if [ "$state" = "vulnerable" ]; then
             cat $outdir/tmp.$blob_count >> $outdir/$state.md.$blob_count
@@ -256,23 +259,23 @@ num_unknown=`grep "^project =" $outdir/unknown.md | sort | uniq | wc -l`
 #
 # Output information about this commit
 #
-echo "# Commit that fixes a vulnerability:" >> $outdir/README.md
+echo "<h1>Commit that fixes a vulnerability:</h1>" >> $outdir/README.md
 echo "$fixed_commit" >> $outdir/README.md
-echo "" >> $outdir/README.md
+echo "<p />" >> $outdir/README.md
 
-echo "# Information about the above commit" >> $outdir/README.md
-echo "$blobs" | sed -e "s/$/  /" >> $outdir/blobs.md
-echo "" >> $outdir/blobs.md
-echo "$files" | sed -e "s/$/  /" >> $outdir/blobs.md
-echo "<a href=blobs.md>Blobs and filenames</a> in commit $fixed_commit  " >> $outdir/README.md
-echo "<a href=bad_blobs>Ancestors </a> of the above blobs, which are before the fixing commit, thus presumably vulnerable. (recursive b2ob)  " >> $outdir/README.md
-echo "<a href=good_blobs>Descendants </a> of the fixed blobs, which presumably also contain the fix. (recursive ob2b)  " >> $outdir/README.md
-echo "" >> $outdir/README.md
+echo "<h1>Information about the above commit</h1>" >> $outdir/README.md
+echo "$blobs" | sed -e "s/$/<br \/>/" >> $outdir/blobs.md
+echo "<p />" >> $outdir/blobs.md
+echo "$files" | sed -e "s/$/<br \/>/" >> $outdir/blobs.md
+echo "<a href=blobs.md>Blobs and filenames</a> in commit $fixed_commit<br />" >> $outdir/README.md
+echo "<a href=bad_blobs>Ancestors </a> of the above blobs, which are before the fixing commit, thus presumably vulnerable. (recursive b2ob)<br />" >> $outdir/README.md
+echo "<a href=good_blobs>Descendants </a> of the fixed blobs, which presumably also contain the fix. (recursive ob2b)<br />" >> $outdir/README.md
+echo "<p />" >> $outdir/README.md
 
-echo "# Projects which have contained one of the presumably vulnerable blobs:" >> $outdir/README.md
-echo "$num_vulnerable <a href="vulnerable.md">Vulnerable Projects</a> (Known to contain presumably vulnerable blob in the most current revision)  " >> $outdir/README.md
-echo "$num_not_vulnerable <a href="not-vulnerable.md">Not Vulnerable Projects</a> (Known to contain a fixed version in the most current revision)  " >> $outdir/README.md
-echo "$num_unknown <a href="unknown.md">Unknown Projects</a> (Presumably vulnerable code has been changed in most current revision, unknown if the changes fixes vulnerability)  " >> $outdir/README.md
-echo "" >> $outdir/README.md
+echo "<h1>Projects which have contained one of the presumably vulnerable blobs:</h1>" >> $outdir/README.md
+echo "$num_vulnerable <a href="vulnerable.md">Vulnerable Projects</a> (Known to contain presumably vulnerable blob in the most current revision)<br />" >> $outdir/README.md
+echo "$num_not_vulnerable <a href="not-vulnerable.md">Not Vulnerable Projects</a> (Known to contain a fixed version in the most current revision)<br />" >> $outdir/README.md
+echo "$num_unknown <a href="unknown.md">Unknown Projects</a> (Presumably vulnerable code has been changed in most current revision, unknown if the changes fixes vulnerability)<br />" >> $outdir/README.md
+echo "<p />" >> $outdir/README.md
 
 exit 0
