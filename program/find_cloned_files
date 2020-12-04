@@ -3,7 +3,8 @@
 #TODO:
 # why does showCmtTree.perl sometimes return error:
 #    example: ./find_cloned_files - d7cad81093cd805110291f84d64d385557d0ffba
-# most test cases and explain the case (like lz4)
+# more test cases and explain the case (like lz4)
+# maybe put output in github.io
 #
 # deduplication (blob and many old blobs will be in same project)
 # can i figure out what branch a commit and blob is in ?
@@ -13,7 +14,7 @@
 # see if there are ways to improve performance
 #      showCmtTree.perl is sometimes called multiple times on the same commit
 #      maybe the for commit loop in print_info should be parallel
-#      grep $gb -> read in once and egrep "x|y|z"
+#      grep $good_blob -> read in once and egrep "x|y|z"
  
 #
 # find_cloned_files:
@@ -25,7 +26,7 @@
 #
 # Global variables
 #
-verbose="false"   # if true, include project url and commit time
+verbose="true"   # if true, include project url and commit time
 outdir="./out"   # this gets changed by command line arg 
 hostname=`uname -n`
 max_threads=8  # how many processes to run in parallel
@@ -56,9 +57,9 @@ function print_info {
 
     commits=$(getValues 'b2c' "$blob\n")
 
-    echo "<h1>blob = $blob</h1>" >> $outdir/vulnerable.md.$blob_count
-    echo "<h1>blob = $blob</h1>" >> $outdir/not-vulnerable.md.$blob_count
-    echo "<h1>blob = $blob</h1>" >> $outdir/unknown.md.$blob_count
+    echo "<h1>blob = $blob</h1>" >> $outdir/vulnerable.html.$blob_count
+    echo "<h1>blob = $blob</h1>" >> $outdir/not-vulnerable.html.$blob_count
+    echo "<h1>blob = $blob</h1>" >> $outdir/unknown.html.$blob_count
     for commit in $commits; do
         rm -f $outdir/tmp.$blob_count
 
@@ -99,13 +100,13 @@ function print_info {
                 #echo "No  " >> $outdir/tmp.$blob_count
                 state="unknown"
                 # see if head commit contains one of the known good blobs
-                while read -r gb; do  # gb is good blob
-                    result=`echo $tree | grep $gb`
+                for good_blob in $(cat $outdir/good_blobs.txt); do
+                    result=`echo $tree | grep $good_blob`
                     if [ "$result" != "" ]; then
                         state="not-vulnerable"
                         break
                     fi
-                done < $outdir/good_blobs;
+                done
             fi
         done
         #echo "state: $state  " >> $outdir/tmp.$blob_count
@@ -143,11 +144,11 @@ function print_info {
         echo "<br />" >> $outdir/tmp.$blob_count
 
         if [ "$state" = "vulnerable" ]; then
-            cat $outdir/tmp.$blob_count >> $outdir/$state.md.$blob_count
+            cat $outdir/tmp.$blob_count >> $outdir/$state.html.$blob_count
         elif [ "$state" = "not-vulnerable" ]; then
-            cat $outdir/tmp.$blob_count >> $outdir/$state.md.$blob_count
+            cat $outdir/tmp.$blob_count >> $outdir/$state.html.$blob_count
         elif [ "$state" = "unknown" ]; then
-            cat $outdir/tmp.$blob_count >> $outdir/$state.md.$blob_count
+            cat $outdir/tmp.$blob_count >> $outdir/$state.html.$blob_count
         else
             echo state: Error: state has an unknown value: \'$state\' >&2
         fi
@@ -216,18 +217,18 @@ files=$(getValues 'c2f' $fixed_commit\n)
 # vulnerability. Then get the blobs in the commit and after. These 
 # likely contain the fix.
 echo "Getting old blobs with b2ob and new blobs with ob2b"
-./b2ob_r $blobs >> $outdir/bad_blobs &
-printf "$blobs\n" >> $outdir/good_blobs
-./ob2b_r $blobs >> $outdir/good_blobs &
+./b2ob_r $blobs >> $outdir/bad_blobs.txt &
+printf "$blobs\n" >> $outdir/good_blobs.txt
+./ob2b_r $blobs >> $outdir/good_blobs.txt &
 wait  # run b2ob_r and ob2b_r in parallel and then wait for them to both finish
 
 #
 # get information about the potentially vulnerable blobs
 #
-echo "found "`wc -l $outdir/bad_blobs | cut -d " " -f 1`" potentially vulnerable blobs"
+echo "found "`wc -l $outdir/bad_blobs.txt | cut -d " " -f 1`" potentially vulnerable blobs"
 
 blob_count=0
-for blob in $(cat $outdir/bad_blobs); do
+for blob in $(cat $outdir/bad_blobs.txt); do
     blob_count=$((blob_count+1))
     print_info $blob $blob_count &
     sleep 0.2 # give it a little time to start before starting the next
@@ -236,6 +237,7 @@ for blob in $(cat $outdir/bad_blobs); do
         sleep 1
     done
 done
+echo "Waiting for remaining processes to finish (all have started)"
 wait
 
 #
@@ -243,39 +245,47 @@ wait
 # set of files
 #
 for ((i=1; i<=$blob_count; i++)); do
-    cat $outdir/vulnerable.md.$i >> $outdir/vulnerable.md
-    cat $outdir/not-vulnerable.md.$i >> $outdir/not-vulnerable.md
-    cat $outdir/unknown.md.$i >> $outdir/unknown.md
-    rm $outdir/vulnerable.md.$i $outdir/not-vulnerable.md.$i $outdir/unknown.md.$i
+    cat $outdir/vulnerable.html.$i >> $outdir/vulnerable.html
+    cat $outdir/not-vulnerable.html.$i >> $outdir/not-vulnerable.html
+    cat $outdir/unknown.html.$i >> $outdir/unknown.html
+    rm $outdir/vulnerable.html.$i $outdir/not-vulnerable.html.$i $outdir/unknown.html.$i
 done
 
 #
 # Collect stats to output 
 #
-num_vulnerable=`grep "^project =" $outdir/vulnerable.md | sort | uniq | wc -l`
-num_not_vulnerable=`grep "^project =" $outdir/not-vulnerable.md | sort | uniq | wc -l`
-num_unknown=`grep "^project =" $outdir/unknown.md | sort | uniq | wc -l`
+num_vulnerable=`grep "^project =" $outdir/vulnerable.html | sort | uniq | wc -l`
+num_not_vulnerable=`grep "^project =" $outdir/not-vulnerable.html | sort | uniq | wc -l`
+num_unknown=`grep "^project =" $outdir/unknown.html | sort | uniq | wc -l`
 
 #
 # Output information about this commit
 #
-echo "<h1>Commit that fixes a vulnerability:</h1>" >> $outdir/README.md
-echo "$fixed_commit" >> $outdir/README.md
-echo "<p />" >> $outdir/README.md
+echo "<h1>Commit that fixes a vulnerability:</h1>" >> $outdir/index.html
+echo "$fixed_commit" >> $outdir/index.html
+echo "<p />" >> $outdir/index.html
 
-echo "<h1>Information about the above commit</h1>" >> $outdir/README.md
-echo "$blobs" | sed -e "s/$/<br \/>/" >> $outdir/blobs.md
-echo "<p />" >> $outdir/blobs.md
-echo "$files" | sed -e "s/$/<br \/>/" >> $outdir/blobs.md
-echo "<a href=blobs.md>Blobs and filenames</a> in commit $fixed_commit<br />" >> $outdir/README.md
-echo "<a href=bad_blobs>Ancestors </a> of the above blobs, which are before the fixing commit, thus presumably vulnerable. (recursive b2ob)<br />" >> $outdir/README.md
-echo "<a href=good_blobs>Descendants </a> of the fixed blobs, which presumably also contain the fix. (recursive ob2b)<br />" >> $outdir/README.md
-echo "<p />" >> $outdir/README.md
+echo "<h1>Information about the above commit</h1>" >> $outdir/index.html
+echo "$blobs" | sed -e "s/$/<br \/>/" >> $outdir/blobs.html
+echo "<p />" >> $outdir/blobs.html
+echo "$files" | sed -e "s/$/<br \/>/" >> $outdir/blobs.html
+echo "<a href=blobs.html>Blobs and filenames</a> in commit $fixed_commit<br />" >> $outdir/index.html
+echo "<a href=bad_blobs.txt>Ancestors </a> of the above blobs, which are before the fixing commit, thus presumably vulnerable. (recursive b2ob)<br />" >> $outdir/index.html
+echo "<a href=good_blobs.txt>Descendants </a> of the fixed blobs, which presumably also contain the fix. (recursive ob2b)<br />" >> $outdir/index.html
+echo "<p />" >> $outdir/index.html
 
-echo "<h1>Projects which have contained one of the presumably vulnerable blobs:</h1>" >> $outdir/README.md
-echo "$num_vulnerable <a href="vulnerable.md">Vulnerable Projects</a> (Known to contain presumably vulnerable blob in the most current revision)<br />" >> $outdir/README.md
-echo "$num_not_vulnerable <a href="not-vulnerable.md">Not Vulnerable Projects</a> (Known to contain a fixed version in the most current revision)<br />" >> $outdir/README.md
-echo "$num_unknown <a href="unknown.md">Unknown Projects</a> (Presumably vulnerable code has been changed in most current revision, unknown if the changes fixes vulnerability)<br />" >> $outdir/README.md
-echo "<p />" >> $outdir/README.md
+echo "<h1>Projects which have contained one of the presumably vulnerable blobs:</h1>" >> $outdir/index.html
+echo "$num_vulnerable <a href="vulnerable.html">Vulnerable Projects</a> (Known to contain presumably vulnerable blob in the most current revision)<br />" >> $outdir/index.html
+echo "$num_not_vulnerable <a href="not-vulnerable.html">Not Vulnerable Projects</a> (Known to contain a fixed version in the most current revision)<br />" >> $outdir/index.html
+echo "$num_unknown <a href="unknown.html">Unknown Projects</a> (Presumably vulnerable code has been changed in most current revision, unknown if the changes fixes vulnerability)<br />" >> $outdir/index.html
+echo "<p />" >> $outdir/index.html
+
+#
+# Create .md files from the html file for easier viewing in github
+#
+cat $outdir/index.html | sed -e "s/\.html/.md/" > $outdir/README.md
+cp $outdir/vulnerable.html $outdir/vulnerable.md
+cp $outdir/not-vulnerable.html $outdir/not-vulnerable.md
+cp $outdir/unknown.html $outdir/unknown.md
 
 exit 0
