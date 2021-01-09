@@ -11,7 +11,7 @@ RIOT is subject to CVE-2017-8289: https://cve.mitre.org/cgi-bin/cvename.cgi?name
 
 The vulnerability was fixed by commit 92fe84214967012e951f7aee5bcee9977c426eef as described at https://github.com/RIOT-OS/RIOT/pull/6961
 
-Full Report: <a href="92fe84214967012e951f7aee5bcee9977c426eef">Full Report<a></br>
+<a href="92fe84214967012e951f7aee5bcee9977c426eef">Full Report<a></br>
 
 </li>
 
