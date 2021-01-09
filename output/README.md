@@ -7,7 +7,7 @@
 <li>
 <a href=https://github.com/RIOT-OS/RIOT>RIOT</a> is a real-time multi-threading operating system.<br>
 
-RIOT is subject to CVE-2017-8289: https://cve.mitre.org/cgi-bin/cvename.cgi?name=2017-8289">CVE-2017-8289
+RIOT is subject to CVE-2017-8289: https://cve.mitre.org/cgi-bin/cvename.cgi?name=2017-8289
 
 The vulnerability was fixed by commit 92fe84214967012e951f7aee5bcee9977c426eef as described at https://github.com/RIOT-OS/RIOT/pull/6961
 
