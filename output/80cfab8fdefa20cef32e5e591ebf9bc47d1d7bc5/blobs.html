@@ -1,0 +1,9 @@
+0cdaa744bcc46ffb8bbca70772e2f31781192a2a<br />
+845c5f8ab9b62566617fde6f0aaf2cc60abc5958<br />
+94d21ae1143906a107337f99f785ed74ef82597d<br />
+a926fbdab3b509e7b552530f88626e8bbe624d1b<br />
+<p />
+package/exim/exim-0001-Build-buildconfig-for-the-host.patch<br />
+package/exim/exim-0002-Don-t-make-backup-copies-of-installed-files.patch<br />
+package/exim/exim-0003-Skip-version-check-and-symlink-installation.patch<br />
+package/exim/exim.mk<br />
