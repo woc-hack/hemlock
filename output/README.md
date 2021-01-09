@@ -20,8 +20,9 @@ Full Report: "92fe84214967012e951f7aee5bcee9977c426eef"
 <li>
 <a href=https://github.com/qemu/qemu/>QEMU</a> is a generic and open source machine & userspace emulator and virtualizer.<br>
 
-QEMU is subject to a buffer overflow vulnerability as described in <a href=https://cve.mitre.org/cgi-bin/cvename.cgi?name=2018-17962>CVE-2018-17962</a>.<br>
-The fix is described <a href=https://github.com/qemu/qemu/commit/b1d80d12c5f7ff081bb80ab4f4241d4248691192>here<a/>.<br>
+QEMU is subject to a buffer overflow vulnerability as described in https://cve.mitre.org/cgi-bin/cvename.cgi?name=2018-17962
+
+The fix is described https://github.com/qemu/qemu/commit/b1d80d12c5f7ff081bb80ab4f4241d4248691192
 
 
 The vulnerability was fixed by commit b1d80d12c5f7ff081bb80ab4f4241d4248691192.<br>
@@ -35,7 +36,7 @@ The vulnerability was fixed by commit b1d80d12c5f7ff081bb80ab4f4241d4248691192.<
 <li>
 <a href=https://github.com/lz4/lz4>LZ4</a> is a widely-used lossless compression algorithm. <br>
 
-LZ4 is subject to a heap-based buffer overflow in releases prior to 1.9.2 as described in <a href=https://cve.mitre.org/cgi-bin/cvename.cgi?name=2019-17543>CVE-2019-17543.</a> <br>
+LZ4 is subject to a heap-based buffer overflow in releases prior to 1.9.2 as described in https://cve.mitre.org/cgi-bin/cvename.cgi?name=2019-17543
 
 The vulnerability was fixed by commit d7cad81093cd805110291f84d64d385557d0ffba.<br>
 
