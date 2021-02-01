@@ -1,5 +1,7 @@
 #! /bin/bash
 
+# Copyright (C) 2020 by David Reid dreid6@vols.utk.edu
+
 #TODO:
 # why does showCmtTree.perl sometimes return error:
 #    example: ./find_cloned_files - d7cad81093cd805110291f84d64d385557d0ffba
@@ -29,7 +31,8 @@
 verbose="true"   # if true, include project url and commit time
 outdir="./out"   # this gets changed by command line arg 
 hostname=`uname -n`
-max_threads=8  # how many processes to run in parallel
+#max_threads=16  # how many processes to run in parallel
+max_threads=4  # how many processes to run in parallel
 
 #
 # Call when user hits control-c. Kill all child processes before exitting.
@@ -209,6 +212,9 @@ if [ "$blobs" = "" ]; then
     echo "Error: commit $fixed_commit is not found in WoC"
     exit
 fi
+echo "$blobs" | sed -e "s/$/<br \/>/" >> $outdir/blobs.html
+echo "<p />" >> $outdir/blobs.html
+echo "$files" | sed -e "s/$/<br \/>/" >> $outdir/blobs.html
 
 # get files in this commit
 files=$(getValues 'c2f' $fixed_commit\n)
@@ -264,11 +270,8 @@ num_unknown=`grep "^project =" $outdir/unknown.html | sort | uniq | wc -l`
 echo "<h1>Commit that fixes a vulnerability:</h1>" >> $outdir/index.html
 echo "$fixed_commit" >> $outdir/index.html
 echo "<p />" >> $outdir/index.html
-
 echo "<h1>Information about the above commit</h1>" >> $outdir/index.html
-echo "$blobs" | sed -e "s/$/<br \/>/" >> $outdir/blobs.html
-echo "<p />" >> $outdir/blobs.html
-echo "$files" | sed -e "s/$/<br \/>/" >> $outdir/blobs.html
+
 echo "<a href=blobs.html>Blobs and filenames</a> in commit $fixed_commit<br />" >> $outdir/index.html
 echo "<a href=bad_blobs.txt>Ancestors </a> of the above blobs, which are before the fixing commit, thus presumably vulnerable. (recursive b2ob)<br />" >> $outdir/index.html
 echo "<a href=good_blobs.txt>Descendants </a> of the fixed blobs, which presumably also contain the fix. (recursive ob2b)<br />" >> $outdir/index.html
