@@ -1,11 +1,63 @@
 <html>
 <head>
-<title>Team Hemlock</title>
+<title>Security Vulnerabilities</title>
 </head>
 <body>
 
 <h2>Projects with known vulnerabilities that have been fixed</h2> 
+
+The following is a list of open source projects which had known security 
+vulnerabilities which have now been fixed. In many cases, copies of those 
+projects were made before the vulnerability was fixed. In some cases, the 
+copy was fixed, but in other cases the vulnerability is still present in 
+the copy.
+<p>
+Each entry in the project list below contains 4 lines:
+<ol>
+<li>The name of the project and link to the project's page. This is the
+project where the vulnerability was fixed.
+</li>
+<li>A link to the CVE (Common Vulnerabilities and Exposures) list entry.
+This gives information about the vulnerability and the fix.
+The CVE page also includes a link (near the top of the page) to the
+National Vulnerability Database (NVD) which gives more information about the 
+vulnerability.
+</li>
+<li>A link to a description of the fix.
+</li>
+<li>
+A link to a list of active projects which contain the vulnerability.
+</li>
+<li>A link to the full report. (not needed for this assignment).
+<!--The last section in the Full Report is titled "Projects which have contained one of the presumably vulnerable blobs". These are
+projects which have a some point contained the vulnerable file.
+There are 3 sections under that heading:
+<ol>
+<li>Vulnerable projects: These are projects that contain a revision of the file prior to the vulnerability being fixed.</li>
+<li>Not vulnerable projects: These are projects that contain a known good version of the file.</li>
+<li>Unknown projects: These are projects where the vulnerable file has been changed, but we don't know if the change fixed the vulnerability.</li>
+</ol>
+-->
+</li>
+</ol>
+
+
+<h2>Project List</h2>
 <ul>
+<!------------------------------->
+
+<li>
+<a href=https://github.com/qemu/qemu/>QEMU</a> is a generic and open source machine & userspace emulator and virtualizer.<br>
+
+QEMU is subject to a buffer overflow vulnerability as described in <a href=https://cve.mitre.org/cgi-bin/cvename.cgi?name=2018-17962>CVE-2018-17962</a>.<br>
+The vulnerability was fixed by commit <a href=https://github.com/qemu/qemu/commit/b1d80d12c5f7ff081bb80ab4f4241d4248691192>b1d80d12c5f7ff081bb80ab4f4241d4248691192</a>.
+A description of the fix is <a href=https://lists.gnu.org/archive/html/qemu-devel/2018-09/msg03268.html>here</a><br>
+<a href="b1d80d12c5f7ff081bb80ab4f4241d4248691192">Full Report</a><br>
+
+<a href=b1d80d12c5f7ff081bb80ab4f4241d4248691192/vulnerable.hack.html>Abbreviated Report</a>: Projects which are known to contain the vulnerability and which have been touched in 2020.<br>
+<br>
+</li>
+
 <!------------------------------->
 
 <li>
@@ -22,52 +74,77 @@ The vulnerability was fixed by commit 92fe84214967012e951f7aee5bcee9977c426eef a
 <!------------------------------->
 
 <li>
-<a href=https://github.com/qemu/qemu/>QEMU</a> is a generic and open source machine & userspace emulator and virtualizer.<br>
-
-QEMU is subject to a buffer overflow vulnerability as described in <a href=https://cve.mitre.org/cgi-bin/cvename.cgi?name=2018-17962>CVE-2018-17962</a>.<br>
-The fix is described <a href=https://github.com/qemu/qemu/commit/b1d80d12c5f7ff081bb80ab4f4241d4248691192>here<a/>.<br>
-
-
-The vulnerability was fixed by commit b1d80d12c5f7ff081bb80ab4f4241d4248691192.<br>
-
-<a href="b1d80d12c5f7ff081bb80ab4f4241d4248691192">Full Report</a><br>
-<br>
-</li>
-
-<!------------------------------->
-
-<li>
 <a href=https://github.com/lz4/lz4>LZ4</a> is a widely-used lossless compression algorithm. <br>
 
 LZ4 is subject to a heap-based buffer overflow in releases prior to 1.9.2 as described in <a href=https://cve.mitre.org/cgi-bin/cvename.cgi?name=2019-17543>CVE-2019-17543.</a> <br>
 
-The vulnerability was fixed by commit d7cad81093cd805110291f84d64d385557d0ffba.<br>
+<a href=https://github.com/lz4/lz4/commit/d7cad81093cd805110291f84d64d385557d0ffba>fix</a><br>
 
 <a href="d7cad81093cd805110291f84d64d385557d0ffba-hack">Full Report</a><br>
 <br>
 </li>
-</ul>
 
 <!------------------------------->
 
-<hr />
 
-<h2>The following are commits found by searching for CVE in commit log messages</h2>
+<li>
+<a href=http://tomcat.apache.org>Apache Tomcat</a> is a Java web server from Apache<br>
+<a href=https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2011-0534>CVE-2011-0534</a> <br>
+<a href=http://tomcat.apache.org/security-6.html#Fixed_in_Apache_Tomcat_6.0.32>fix</a><br>
+<a href=008447095ce8c3a8f713093d5e618f3f06f94ea8/>Full Report</a><br>
+<br>
+</li>
 
-<ul>
-<li><a href=80cfab8fdefa20cef32e5e591ebf9bc47d1d7bc5>80cfab8fdefa20cef32e5e591ebf9bc47d1d7bc5</a></li>
-<li><a href=005effc5d15c43b190c75c7d1dfd709a17b192aa>005effc5d15c43b190c75c7d1dfd709a17b192aa</a></li>
-<li><a href=80dea7835635a9361e5c8be5bb52967bf1a0b34f>80dea7835635a9361e5c8be5bb52967bf1a0b34f</a></li>
-<li><a href=80b7eb4e3360a85e6e036f42bed05e9b9c7854a9>80b7eb4e3360a85e6e036f42bed05e9b9c7854a9<a/></li> <!-- longer -->
-<li><a href=005f10352a67e8d1508a6980a8c057406c51bfca>005f10352a67e8d1508a6980a8c057406c51bfca<a/></li> 
-<li><a href=ff4201ed9c5b7994815caa01cd5114b8d799ee76>ff4201ed9c5b7994815caa01cd5114b8d799ee76<a/></li>
-<li><a href=002a74e570563453eab91e0f09db77550cd0b79f>002a74e570563453eab91e0f09db77550cd0b79f<a/></li>
-<li><a href=0049dee9285aa7c5b8c699e39b2dcfb709054b3e>0049dee9285aa7c5b8c699e39b2dcfb709054b3e<a/></li>
-<li><a href=80097a266b1848a4ebc6e8a2a1750f54c4a1abcf>80097a266b1848a4ebc6e8a2a1750f54c4a1abcf<a/></li>
-<li><a href=807f03ef30feb659523b85dad0394b7f0c0c57da>807f03ef30feb659523b85dad0394b7f0c0c57da<a/></li>
+
+<!------------------------------->
+
+<li>
+<a href=https://redmine.lighttpd.net/>Lighttpd</a> is a light weight web server<br>
+<a href=https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2011-4362>CVE-2011-4362</a> <br>
+<a href=http://download.lighttpd.net/lighttpd/security/lighttpd_sa_2011_01.txt>fix</a><br>
+<a href=7f4a2bbcf397fb843a8abac78901a692fa576c5f/>Full Report</a><br>
+<br>
+</li>
+<!------------------------------->
+
+
+<li>
+<a href=href=https://github.com/krb5/krb5/>Kerberos</a><br>
+<a href=https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2015-2695>CVE-2015-2695</a> <br>
+<a href=https://github.com/krb5/krb5/commit/b51b33f2bc5d1497ddf5bd107f791c101695000d>fix</a><br>
+<a href=000b5f29419465bbcfd2067d07a6e71cecc83e61/>Full Report</a><br>
+<br>
+</li>
+
+
+
+
+<li>
+<a href=https://github.com/freebsd/freebsd-src>FreeBSD</a><br>
+<a href=https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2014-0998>CVE-2014-0998</a> <br>
+<a href=https://www.freebsd.org/security/advisories/FreeBSD-EN-15:01.vt.asc>fix</a><br>
+<a href=00fdf5663ab60629f1fb9bceeb2653c1d6faafbf>Full Report</a><br>
+<br>
+</li>
+
+
+
+
+<!--
+<li>
+<a href=https://pkgsrc.org/wip/>pkgsrc-wip</a><br>
+<a href=https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2012-4405>CVE-2012-4405</a> <br>
+<a href=005effc5d15c43b190c75c7d1dfd709a17b192aa>Full Report</a><br>
+<br>
+</li>
+<pre>
+Projects:
+    AlainODea_pkgsrc-wip
+Commit Message for 005effc5d15c43b190c75c7d1dfd709a17b192aa:
+Add patch-CVE-2012-4405, sync to print/ghostscript.
+</pre>
+</li>
+-->
+
 </ul>
-
-
-</body>
-</html>
 
